@@ -1,4 +1,6 @@
 title: "Client Report - Introduction"
+---
+title: "Client Report - Introduction"
 subtitle: "Course DS 250"
 author: "Michael Johnson"
 format:
@@ -16,12 +18,11 @@ format:
     code-overflow: wrap
     code-copy: hover
     code-tools:
-        source: false
-        toggle: true
-        caption: See code
+      source: false
+      toggle: true
+      caption: See code
 execute: 
   warning: false
-    
 ---
 
 ### Introduction
