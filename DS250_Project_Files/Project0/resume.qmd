@@ -1,89 +1,75 @@
 ---
 layout: cv
-title: Isaac Newtons's CV
+title: Michael Johnson's CV
 ---
-# Isaac Newton
-Physicist, Mathematician, Cambridge professor.
+
+# Michael Johnson
+Software Engineer in Training, Construction Worker
 
 <div id="webaddress">
-<a href="isaac@applesdofall.org">isaac@applesdofall.org</a>
-| <a href="http://en.wikipedia.org/wiki/Isaac_Newton">My wikipedia page</a>
+<a href="mailto:Mike.C.Johnson@hotmail.com">Mike.C.Johnson@hotmail.com</a> | +1 480 521 8865 | Rexburg, ID 83440
 </div>
 
-
 ## Currently
-
-Standing on the shoulders of giants
+Bachelor of Science in Software Engineering - Design & Machine Learning at BYU-Idaho
 
 ### Specialized in
+Software engineering, machine learning, welding, heavy machinery operation, concrete structures.
 
-Laws of motion, gravitation, minting coins, disliking [Robert Hooke](http://en.wikipedia.org/wiki/Robert_Hooke)
+### Skills
+- Stick Welding (2 years, specifically 7018/6010)
+- MIG Welding (1/8''-1 1/2") (2 years)
+- Python (1 year)
+- C#
+- HTML5
+- CSS
+- CAD Drawing and Design
 
+## Work Experience
 
-### Research interests
+### Construction Worker  
+__Precision Precast & Construction__, Rexburg, ID  
+_January 2023 – July 2024_
 
-Cooling, power series, optics, alchemy, planetary motions, apples.
+- Operate heavy machinery including Backhoe, Forklift, and 10-ton Crane.
+- Experience with Forklift (1.5 years), Backhoe (1.25 years), and 10-ton Crane (0.5 years).
+- Create and assemble forms for concrete structures like manholes and headwalls.
+- Finish concrete and prepare steel forms for manhole construction.
+- Operate a Concrete Batch Plant, determining concrete slump and adding additives like plasticizer and accelerator.
+- Communicate effectively with contractors to manage orders and confirm delivery load inventory.
+- Load and unload concrete structures (2-7 tons) using heavy equipment.
+- Perform MIG welding with flux core and argon gas to create frames and grates.
+- Use CAD drawings to design and create custom concrete structures and manhole components.
 
+### Junior Production Technician  
+__Environmental Stone Works (Cornerstone Building Brands)__, Saint George, UT  
+_August 2022 – December 2022_
+
+- Handled the preparation, pouring, and de-molding of concrete molds.
+- Conducted quality control and packaging of finished products.
+- Maintained safety standards and performed regular cleanup and preventative maintenance activities.
+- Performed general machinery maintenance and worked 12-14 hour shifts.
 
 ## Education
 
-`1654-1660`
-__The King's School, Grantham.__
+### Bachelor of Science in Software Engineering - Design & Machine Learning  
+__BYU-Idaho__, Rexburg, ID  
+_July 2021 – Present_
 
-`June 1661 - now`
-__Trinity College, Cambridge__
-
-- Sizar
-
-`1667 - death`
-__Trinity College, Cambridge__
-
-- Fellow
-
-
+### General Education  
+__Mountain View High School__, Mesa, AZ  
+_August 2016 – May 2020_
 
 ## Awards
 
-`2012`
-President, *Royal Society*, London, UK
+- __Skills USA Welding Competition 1st Place__, 2019  
+  Competed in Stick and MIG welding at high school level and won 1st place.
 
-Associate, *French Academy of Science*, Paris, France
+## Certifications and Licenses
 
+- __OSHA 10 Certification__, Construction Safety and Health (August 2019 – Present)
+- __Certified SolidWorks Associate (CSWA)__ (December 2021 – Present)  
+  Scored 225/240 in Mechanical Design.
+- __Certified SolidWorks Professional (CSWPA-DT)__ (June 2022 – Present)  
+  Scored 180/200.
 
-
-## Publications
-
-<!-- A list is also available [online](http://scholar.google.co.uk/citations?user=LTOTl0YAAAAJ) -->
-
-### Journals
-
-`1669`
-Newton Sir I, De analysi per æquationes numero terminorum infinitas. 
-
-`1669`
-Lectiones opticæ.
-
-etc. etc. etc.
-
-### Patents
-
-`2012`
-Infinitesimal calculus for solutions to physics problems, [SMBC](http://www.techdirt.com/articles/20121011/09312820678/if-patents-had-been-around-time-newton.shtml) patent 001
-
-
-## Occupation
-
-`1600`
-__Royal Mint__, London
-
-- Warden
-- Minted coins
-
-`1600`
-__Lucasian professor of Mathematics__, Cambridge University
-
-
-
-<!-- ### Footer
-
-Last updated: May 2013 -->
