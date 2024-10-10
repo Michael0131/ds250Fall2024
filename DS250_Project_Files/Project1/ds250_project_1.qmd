@@ -1,7 +1,7 @@
 ---
 title: "Client Report - Project 1"
 subtitle: "Course DS 250"
-author: "YOUR NAME HERE"
+author: "Michael Johnson"
 format:
   html:
     self-contained: true
@@ -25,8 +25,6 @@ execute:
     
 ---
 
-_THIS `.qmd` FILE SHOULD BE USED TO WRITE YOUR REPORT.  YOU WILL NEED TO COMPILE THE REPORT INTO A `.html` DOCUMENT AND SUBMIT IT ON CANVAS._
-
 ```{python}
 #| label: libraries
 #| include: false
@@ -34,7 +32,7 @@ import pandas as pd
 import numpy as np
 from lets_plot import *
 LetsPlot.setup_html()
-
+from plotnine import ggplot, aes, geom_line, geom_vline, scale_x_continuous, scale_y_continuous, labs, theme, element_text
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -42,27 +40,28 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 ```{python}
-# Load any data you need for the report
-# df = pd.read_csv('filename.csv')
+# Load any data for the report
+file_path = "year_names.csv"  # Ensure the path to your CSV is correct
+df = pd.read_csv('names_year.csv')
 
 ```
 
 
 ## Elevator pitch
 
-PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this report?
+This project explores how baby names have evolved over time, focusing on the influence of Christianity and cultural trends. By analyzing historical data, we'll compare the popularity of Christian names like Mary, Martha, Peter, and Paul from 1920 to 2000. Additionally, we'll investigate how a famous movie impacted the usage of a particular name. Through visualizations, we'll reveal the factors that shape naming practices across generations.
 
+## How does your name at your birth year compare to its use historically? |Task 1
 
-```{python}
-# Any code for your pitch
+Information we are seeking: My name is "Michael" and my brith year is "2002"
 
-```
+Key Points from the Chart:
 
-__Highlight the Questions and Tasks__
+Peak Popularity: The line chart shows when the name "Michael" was most popular. You should see that "Michael" was a very common name in the late 20th century.
+Reference Line for 2002: You added a red dashed line at the year 2002 to mark your birth year, making it easier to compare that year to the overall trend.
 
-## Question|Task 1
-
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+Reference Line Insight:
+The red dashed line marks 2002, and based on the data, 23,452 babies were named Michael in 2002. Comparing this year to the historical trend can show whether the popularity was rising, falling, or stable at that time.
 
 ```{python}
 #| label: Q1
@@ -70,20 +69,253 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 # Include and execute your code here
 
 
+Michael_data = df.query("name =='Michael'")
+
+#This will create graph with a blue line showing the data for the name "Michael"
+plot = (
+  ggplot(Michael_data, aes(x='year', y='Total')) +
+  geom_line(color="blue") +
+  #This will create the reference line for the year I was born "2002"
+  geom_vline(xintercept=2002, linetype='dashed', color='red', size=1)
+)
+# Display the plot
+print(plot)
+
+
+Michaels_in_2002 = Michael_data.query("year == 2002")
+Michaels_in_2002 = Michaels_in_2002['Total'].sum()
+
+print(f"There were {int(Michaels_in_2002)} Michael(s) born in 2002")
+
 ```
 
 
-## Question|Task 2
+## If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess? |Task 2
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+## Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of 
+
+## Comments
+
+Filtered the Data: I filtered the dataset to focus only on the name Brittany, so I could analyze its popularity over the years.
+
+Visualized the Data: I created a line plot to show how the name Brittany became popular, peaked around 1990, and then declined in usage after 2000.
+
+Found the Peak Year: Using the data, I identified that 1990 was the year when the name Brittany was most popular.
+
+Estimated Brittany’s Age: By subtracting the peak year (1990) from the current year (2024), I estimated that someone named Brittany is likely around 34 years old.
+
+Identified Unlikely Ages: From the graph and data, I observed that the name Brittany was uncommon before 1980 and after 2000. Therefore, I wouldn’t guess that someone named Brittany is older than 44 or younger than 24.
+
+Conclusion: Based on the peak popularity in 1990, I guessed Brittany is likely 34 years old, and it’s unlikely she is outside the 24-44 age range, as the name was uncommon before and after that period.
+
+```{python}
+#| label: Q2
+#| code-summary: Read and format data
+# Include and execute your code here
+brittany_name_data = df.query("name == 'Brittany'")
+print(brittany_name_data.head())
+
+plot = (
+  ggplot(brittany_name_data, aes(x='year', y='Total')) +
+  geom_line(color='blue') +
+  geom_vline(xintercept=1990, linetype='dashed', color='red', size=1) +
+  labs(
+    title= "Historical Usage of the Name Brittany",
+    x ="Year",
+    y = "# of Babies named 'Brittany'"
+  ) +
+  theme(                                                  # Step 4: Format the chart
+        axis_text_x=element_text(rotation=45, hjust=1),      # Rotate x-axis labels for readability
+        plot_title=element_text(size=14, face="bold")        # Style the title
+    )
+)
+print(plot)
+
+#I can see from this plot that there were a peakname of brittanys in 1990
+
+# I will use this to make sure my function is correct:
+# Find the row where the name 'Brittany' had the highest number of babies
+peak_year_row = brittany_name_data[brittany_name_data['Total'] == brittany_name_data['Total'].max()]
+
+# Extract the peak year
+peak_year = peak_year_row['year'].values[0]
+
+# Print the peak year
+print(f"The peak year for the name Brittany is: {peak_year}")
+
+#now that I know the peak year is 1990 based on the data, and it matches the graph. I can calculate their age based on the current year.
+brittany_age = 2024 - peak_year
+
+#Then I will print out my guess: 
+
+print(f"Based on the data, the peak year being: {int(peak_year)} and the current year being 2024. It is safe to assume that Brittany is: {int(brittany_age)}")
+
+#Looking at the graph you can assume that it is unlikely that Brittany was born before 1980, and after the year 2000.
+
+#Lets find the earliest year for Brittany in the data set.
+earliest_year = brittany_name_data['year'].min()
+oldest_age = 2024- earliest_year
+
+#now lets get the youngest age
+latest_year = brittany_name_data['year'].max()
+youngest_age = 2024- latest_year
+print("")
+print(f"We know that it is unlikely that Brittany is between the ages of {int(youngest_age)}-24 and 44-{int(oldest_age)} ")
+print("")
+print(f"We know this because the name 'Brittany' first appeared in {int(earliest_year)} and did not rise substantually until 1980.")
+print("")
+print(f"Brittany also returned to lower popularity in 2000. These ranges are the least likely ages of Brittany")
+
+
+```
+
+
+__Highlight the Questions and Tasks__
+
+## Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice? |Task 3
+
+## Comments
+
+Mary: The name Mary is likely to show the strongest popularity in the early to mid-20th century, especially around the 1920s and 1950s. However, you’ll likely notice a decline after the 1960s, with fewer babies being named Mary toward the end of the century.
+
+Martha: The name Martha might exhibit a modest usage throughout the 20th century, with some peaks and declines, but it may not have been as popular as Mary.
+
+Peter: Peter may show steady usage throughout the century, with possible increases in popularity around mid-century, but not reaching the same high levels as Mary.
+
+Paul: Paul might follow a similar trend to Peter, showing relatively consistent usage with potential fluctuations, but likely not seeing extreme peaks or sharp declines.
+
+```{python}
+#| label: Q1
+#| code-summary: Read and format data
+# Include and execute your code here
+names_to_compare = ['Mary', 'Martha', 'Peter', 'Paul']
+
+name_data_filtered = df.query("name in @names_to_compare")
+
+name_data_filtered = name_data_filtered.query("year >= 1920 and year <= 2000")
+
+# Create a line plot to compare the name usage of Mary, Martha, Peter, and Paul
+plot = (
+    ggplot(name_data_filtered, aes(x='year', y='Total', color='name')) +  # Map year to x-axis, Total to y-axis, and differentiate by name
+    geom_line() +  # Draw a line for each name
+    labs(
+        title="Name Usage Comparison (1920 - 2000)",
+        x="Year",
+        y="Number of Babies Named"
+    ) +
+    theme(
+        axis_text_x=element_text(rotation=45, hjust=1),
+        plot_title=element_text(size=14, face="bold")
+    )
+)
+
+# Display the plot
+print(plot)
+
+```
+
+
+## Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?|Task 4
+
+## Comments
+
+Name Chosen: I chose the name Brad, which is closely associated with the actor Brad Pitt. The movie Fight Club, featuring Brad Pitt, was released in 1999, so I used that year as the point of interest to see if the movie impacted the popularity of the name.
+
+Plot Overview: I generated a plot showing how many babies were named Brad over time, with a red dashed line marking 1999 as the release year of Fight Club. My goal was to observe whether the name became more popular after the movie’s release.
+
+## Conclusion
+
+Based on the data, the movie Fight Club did not have an effect on the number of babies given the name Brad. The name was already on a downward trend since the 1980s, and the release year of the movie did not cause any noticeable change in this trend.
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
 
+# Filter the data for the chosen name (Brad in this example)
+unique_name = 'Brad'
+unique_name_data = df.query("name == @unique_name")
 
+
+# Plot the usage of the name over time
+plot = (
+    ggplot(unique_name_data, aes(x='year', y='Total')) +  # Map year to x-axis, Total (number of babies) to y-axis
+    geom_line(color='purple') +  # Create a line plot for the name usage
+    geom_vline(xintercept=1999, linetype='dashed', color='red', size=1) +  # Add a vertical line for the movie release year
+    labs(
+        title="Usage of the Name 'Brad' Over Time",
+        x="Year",
+        y="Number of Babies Named Brad"
+    ) +
+    theme(
+        axis_text_x=element_text(rotation=45, hjust=1),  # Rotate the x-axis labels
+        plot_title=element_text(size=14, face="bold")
+    )
+)
+
+# Display the plot
+print(plot)
 ```
 
-ADD MORE QUESTION SECTIONS AS NEEDED
 
+## Reproduce the chart Elliot using the data from the names_year.csv file. |Task 5 (Stretch)
+
+
+
+```{python}
+#| label: Q2
+#| code-summary: Read and format data
+# Include and execute your code here
+
+import numpy as np
+from plotnine import ggplot, aes, geom_line, geom_vline, geom_text, scale_x_continuous, scale_y_continuous, labs, theme, element_text, guides, guide_legend
+
+# Create a mapping for release dates and their respective labels
+release_mapping = {
+    1982: {"label": "E.T Released", "ha": "right"},  # Align to the left of 1982
+    1985: {"label": "Second Release", "ha": "left"},  # Align to the right of 1985
+    2002: {"label": "Third Release", "ha": "left"}  # Align to the right of 2002
+}
+
+# Filter the data for "Elliot" and only include data from 1950 onwards
+target_name_data = df.query("name == 'Elliot' and year >= 1950")
+
+# Ensure the 'year' and 'Total' columns are treated as numeric
+target_name_data['year'] = target_name_data['year'].astype(int)
+target_name_data['Total'] = target_name_data['Total'].astype(int)
+
+# Create the plot for the name "Elliot" with a blue line and manual legend
+plot = (
+    ggplot(target_name_data, aes(x='year', y='Total')) +  # Define the data and axes
+    geom_line(aes(color="'Elliot'"), size=1.5) +  # Force color to show in the legend with "Elliot"
+    scale_x_continuous(breaks=np.arange(1950, 2020, step=10)) +  # Set x-axis breaks every 10 years from 1950
+    scale_y_continuous(breaks=np.arange(0, target_name_data['Total'].max() + 1, step=200)) +  # Set y-axis breaks every 200 names
+    labs(
+        title="Usage of the Name 'Elliot' Relative to the Movie 'E.T' Release",
+        subtitle="A look at how the movie releases impacted the popularity of the name",
+        caption="Source: Baby Name Dataset",
+        x="Year",
+        y="Number of Babies Named Elliot",
+    ) +
+    theme(
+        axis_text_x=element_text(rotation=45, hjust=1),  # Rotate the x-axis labels
+        plot_title=element_text(size=14, face="bold"),
+        legend_position="right"  # Set the legend position to the right
+    )
+)
+
+# Add manual legend by overriding the color with 'blue'
+plot += guides(color=guide_legend(override_aes={'color': 'blue'}, title="Elliot"))
+plot += geom_line(color='blue', size=1.5)
+
+# Add annotations for the release years
+for year, details in release_mapping.items():
+    plot += geom_vline(xintercept=year, linetype='dashed', color='red', size=1)  # Add vertical line for each release year
+    plot += geom_text(x=year, y=1250, label=details["label"], color="black", ha=details["ha"], size=8)  # Add text annotation with smaller size
+
+# Display the plot
+print(plot)
+
+
+    
+```
