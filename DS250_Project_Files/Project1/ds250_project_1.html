@@ -3122,17 +3122,23 @@ vertical-align: -.125em;
   <li><a href="#elevator-pitch" id="toc-elevator-pitch">Elevator pitch</a></li>
   <li><a href="#how-does-your-name-at-your-birth-year-compare-to-its-use-historically-task-1" id="toc-how-does-your-name-at-your-birth-year-compare-to-its-use-historically-task-1">How does your name at your birth year compare to its use historically? |Task 1</a></li>
   <li><a href="#if-you-talked-to-someone-named-brittany-on-the-phone-what-is-your-guess-of-his-or-her-age-what-ages-would-you-not-guess-task-2" id="toc-if-you-talked-to-someone-named-brittany-on-the-phone-what-is-your-guess-of-his-or-her-age-what-ages-would-you-not-guess-task-2">If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess? |Task 2</a></li>
-  <li><a href="#answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34.-based-of-the-same-information-brittany-is-least-likely-to-be-between-the-ages-of" id="toc-answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34.-based-of-the-same-information-brittany-is-least-likely-to-be-between-the-ages-of">Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of</a></li>
-  <li><a href="#comments" id="toc-comments">Comments</a></li>
+  <li><a href="#answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34." id="toc-answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34.">Answer: Based on my evaluation of the data and graph Brittany is most likely 34.</a></li>
+  <li><a href="#comments" id="toc-comments">Comments</a>
+  <ul>
   <li><a href="#mary-martha-peter-and-paul-are-all-christian-names.-from-1920---2000-compare-the-name-usage-of-each-of-the-four-names-in-a-single-chart.-what-trends-do-you-notice-task-3" id="toc-mary-martha-peter-and-paul-are-all-christian-names.-from-1920---2000-compare-the-name-usage-of-each-of-the-four-names-in-a-single-chart.-what-trends-do-you-notice-task-3">Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice? |Task 3</a></li>
-  <li><a href="#comments-1" id="toc-comments-1">Comments</a></li>
+  </ul></li>
+  <li><a href="#comments-1" id="toc-comments-1">Comments</a>
+  <ul>
   <li><a href="#think-of-a-unique-name-from-a-famous-movie.-plot-the-usage-of-that-name-and-see-how-changes-line-up-with-the-movie-release.-does-it-look-like-the-movie-had-an-effect-on-usagetask-4" id="toc-think-of-a-unique-name-from-a-famous-movie.-plot-the-usage-of-that-name-and-see-how-changes-line-up-with-the-movie-release.-does-it-look-like-the-movie-had-an-effect-on-usagetask-4">Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?|Task 4</a></li>
+  </ul></li>
   <li><a href="#comments-2" id="toc-comments-2">Comments</a></li>
-  <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion">Conclusion</a>
+  <ul>
   <li><a href="#reproduce-the-chart-elliot-using-the-data-from-the-names_year.csv-file.-task-5-stretch" id="toc-reproduce-the-chart-elliot-using-the-data-from-the-names_year.csv-file.-task-5-stretch">Reproduce the chart Elliot using the data from the names_year.csv file. |Task 5 (Stretch)</a></li>
+  </ul></li>
   </ul>
 </nav>
-<div id="58a54760" class="cell" data-execution_count="2">
+<div id="0841eb88" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load any data for the report</span></span>
@@ -3170,9 +3176,7 @@ vertical-align: -.125em;
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>Michaels_in_2002 <span class="op">=</span> Michael_data.query(<span class="st">&quot;year == 2002&quot;</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>Michaels_in_2002 <span class="op">=</span> Michaels_in_2002[<span class="st">&#39;Total&#39;</span>].<span class="bu">sum</span>()</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;There were </span><span class="sc">{</span><span class="bu">int</span>(Michaels_in_2002)<span class="sc">}</span><span class="ss"> Michael(s) born in 2002&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>Michaels_in_2002 <span class="op">=</span> Michaels_in_2002[<span class="st">&#39;Total&#39;</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -3182,19 +3186,18 @@ vertical-align: -.125em;
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-There were 23452 Michael(s) born in 2002</code></pre>
+<pre><code></code></pre>
 </div>
 </div>
 </section>
 <section id="if-you-talked-to-someone-named-brittany-on-the-phone-what-is-your-guess-of-his-or-her-age-what-ages-would-you-not-guess-task-2" class="level2">
 <h2 class="anchored" data-anchor-id="if-you-talked-to-someone-named-brittany-on-the-phone-what-is-your-guess-of-his-or-her-age-what-ages-would-you-not-guess-task-2">If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess? |Task 2</h2>
 </section>
-<section id="answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34.-based-of-the-same-information-brittany-is-least-likely-to-be-between-the-ages-of" class="level2">
-<h2 class="anchored" data-anchor-id="answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34.-based-of-the-same-information-brittany-is-least-likely-to-be-between-the-ages-of">Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of</h2>
+<section id="answer-based-on-my-evaluation-of-the-data-and-graph-brittany-is-most-likely-34." class="level1">
+<h1>Answer: Based on my evaluation of the data and graph Brittany is most likely 34.</h1>
 </section>
-<section id="comments" class="level2">
-<h2 class="anchored" data-anchor-id="comments">Comments</h2>
+<section id="comments" class="level1">
+<h1>Comments</h1>
 <p>Filtered the Data: I filtered the dataset to focus only on the name Brittany, so I could analyze its popularity over the years.</p>
 <p>Visualized the Data: I created a line plot to show how the name Brittany became popular, peaked around 1990, and then declined in usage after 2000.</p>
 <p>Found the Peak Year: Using the data, I identified that 1990 was the year when the name Brittany was most popular.</p>
@@ -3296,12 +3299,12 @@ Brittany also returned to lower popularity in 2000. These ranges are the least l
 </div>
 </div>
 <p><strong>Highlight the Questions and Tasks</strong></p>
-</section>
 <section id="mary-martha-peter-and-paul-are-all-christian-names.-from-1920---2000-compare-the-name-usage-of-each-of-the-four-names-in-a-single-chart.-what-trends-do-you-notice-task-3" class="level2">
 <h2 class="anchored" data-anchor-id="mary-martha-peter-and-paul-are-all-christian-names.-from-1920---2000-compare-the-name-usage-of-each-of-the-four-names-in-a-single-chart.-what-trends-do-you-notice-task-3">Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice? |Task 3</h2>
 </section>
-<section id="comments-1" class="level2">
-<h2 class="anchored" data-anchor-id="comments-1">Comments</h2>
+</section>
+<section id="comments-1" class="level1">
+<h1>Comments</h1>
 <p>Mary: The name Mary is likely to show the strongest popularity in the early to mid-20th century, especially around the 1920s and 1950s. However, you’ll likely notice a decline after the 1960s, with fewer babies being named Mary toward the end of the century.</p>
 <p>Martha: The name Martha might exhibit a modest usage throughout the 20th century, with some peaks and declines, but it may not have been as popular as Mary.</p>
 <p>Peter: Peter may show steady usage throughout the century, with possible increases in popularity around mid-century, but not reaching the same high levels as Mary.</p>
@@ -3345,17 +3348,17 @@ Brittany also returned to lower popularity in 2000. These ranges are the least l
 <pre><code></code></pre>
 </div>
 </div>
-</section>
 <section id="think-of-a-unique-name-from-a-famous-movie.-plot-the-usage-of-that-name-and-see-how-changes-line-up-with-the-movie-release.-does-it-look-like-the-movie-had-an-effect-on-usagetask-4" class="level2">
 <h2 class="anchored" data-anchor-id="think-of-a-unique-name-from-a-famous-movie.-plot-the-usage-of-that-name-and-see-how-changes-line-up-with-the-movie-release.-does-it-look-like-the-movie-had-an-effect-on-usagetask-4">Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?|Task 4</h2>
 </section>
-<section id="comments-2" class="level2">
-<h2 class="anchored" data-anchor-id="comments-2">Comments</h2>
+</section>
+<section id="comments-2" class="level1">
+<h1>Comments</h1>
 <p>Name Chosen: I chose the name Brad, which is closely associated with the actor Brad Pitt. The movie Fight Club, featuring Brad Pitt, was released in 1999, so I used that year as the point of interest to see if the movie impacted the popularity of the name.</p>
 <p>Plot Overview: I generated a plot showing how many babies were named Brad over time, with a red dashed line marking 1999 as the release year of Fight Club. My goal was to observe whether the name became more popular after the movie’s release.</p>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
 <p>Based on the data, the movie Fight Club did not have an effect on the number of babies given the name Brad. The name was already on a downward trend since the 1980s, and the release year of the movie did not cause any noticeable change in this trend.</p>
 <div id="cell-Q4" class="cell" data-execution_count="6">
 <details class="code-fold">
@@ -3397,7 +3400,6 @@ Brittany also returned to lower popularity in 2000. These ranges are the least l
 <pre><code></code></pre>
 </div>
 </div>
-</section>
 <section id="reproduce-the-chart-elliot-using-the-data-from-the-names_year.csv-file.-task-5-stretch" class="level2">
 <h2 class="anchored" data-anchor-id="reproduce-the-chart-elliot-using-the-data-from-the-names_year.csv-file.-task-5-stretch">Reproduce the chart Elliot using the data from the names_year.csv file. |Task 5 (Stretch)</h2>
 <div id="cell-Q5" class="cell" data-execution_count="7">
@@ -3461,6 +3463,7 @@ Brittany also returned to lower popularity in 2000. These ranges are the least l
 <pre><code></code></pre>
 </div>
 </div>
+</section>
 </section>
 
 </main>

@@ -85,14 +85,13 @@ print(plot)
 Michaels_in_2002 = Michael_data.query("year == 2002")
 Michaels_in_2002 = Michaels_in_2002['Total'].sum()
 
-print(f"There were {int(Michaels_in_2002)} Michael(s) born in 2002")
 
 ```
 
 
 ## If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess? |Task 2
 
-# Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of 
+# Answer: Based on my evaluation of the data and graph Brittany is most likely 34. 
 
 # Comments
 
