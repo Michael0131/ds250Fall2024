@@ -291,11 +291,9 @@ plot = (
     scale_x_continuous(breaks=np.arange(1950, 2020, step=10)) +  # Set x-axis breaks every 10 years from 1950
     scale_y_continuous(breaks=np.arange(0, target_name_data['Total'].max() + 1, step=200)) +  # Set y-axis breaks every 200 names
     labs(
-        title="Usage of the Name 'Elliot' Relative to the Movie 'E.T' Release",
-        subtitle="A look at how the movie releases impacted the popularity of the name",
-        caption="Source: Baby Name Dataset",
+        title="Usage of the Name 'Elliot'",
         x="Year",
-        y="Number of Babies Named Elliot",
+        y="Total",
     ) +
     theme(
         axis_text_x=element_text(rotation=45, hjust=1),  # Rotate the x-axis labels
@@ -305,7 +303,7 @@ plot = (
 )
 
 # Add manual legend by overriding the color with 'blue'
-plot += guides(color=guide_legend(override_aes={'color': 'blue'}, title="Elliot"))
+plot += guides(color=guide_legend(override_aes={'color': 'blue'}, title="Name"))
 plot += geom_line(color='blue', size=1.5)
 
 # Add annotations for the release years
