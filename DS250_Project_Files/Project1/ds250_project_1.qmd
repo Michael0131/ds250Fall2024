@@ -32,7 +32,7 @@ import pandas as pd
 import numpy as np
 from lets_plot import *
 LetsPlot.setup_html()
-from plotnine import ggplot, aes, geom_line, geom_vline, scale_x_continuous, scale_y_continuous, labs, theme, element_text
+from plotnine import ggplot, aes, geom_line, geom_vline, geom_text, scale_x_continuous, scale_y_continuous, labs, theme, element_text, guides, guide_legend
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -92,9 +92,9 @@ print(f"There were {int(Michaels_in_2002)} Michael(s) born in 2002")
 
 ## If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess? |Task 2
 
-## Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of 
+# Answer: Based on my evaluation of the data and graph Brittany is most likely 34. Based of the same information Brittany is least likely to be between the ages of 
 
-## Comments
+# Comments
 
 Filtered the Data: I filtered the dataset to focus only on the name Brittany, so I could analyze its popularity over the years.
 
@@ -174,7 +174,7 @@ __Highlight the Questions and Tasks__
 
 ## Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice? |Task 3
 
-## Comments
+# Comments
 
 Mary: The name Mary is likely to show the strongest popularity in the early to mid-20th century, especially around the 1920s and 1950s. However, you’ll likely notice a decline after the 1960s, with fewer babies being named Mary toward the end of the century.
 
@@ -185,7 +185,7 @@ Peter: Peter may show steady usage throughout the century, with possible increas
 Paul: Paul might follow a similar trend to Peter, showing relatively consistent usage with potential fluctuations, but likely not seeing extreme peaks or sharp declines.
 
 ```{python}
-#| label: Q1
+#| label: Q3
 #| code-summary: Read and format data
 # Include and execute your code here
 names_to_compare = ['Mary', 'Martha', 'Peter', 'Paul']
@@ -217,18 +217,18 @@ print(plot)
 
 ## Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?|Task 4
 
-## Comments
+# Comments
 
 Name Chosen: I chose the name Brad, which is closely associated with the actor Brad Pitt. The movie Fight Club, featuring Brad Pitt, was released in 1999, so I used that year as the point of interest to see if the movie impacted the popularity of the name.
 
 Plot Overview: I generated a plot showing how many babies were named Brad over time, with a red dashed line marking 1999 as the release year of Fight Club. My goal was to observe whether the name became more popular after the movie’s release.
 
-## Conclusion
+# Conclusion
 
 Based on the data, the movie Fight Club did not have an effect on the number of babies given the name Brad. The name was already on a downward trend since the 1980s, and the release year of the movie did not cause any noticeable change in this trend.
 
 ```{python}
-#| label: Q2
+#| label: Q4
 #| code-summary: Read and format data
 # Include and execute your code here
 
@@ -263,12 +263,10 @@ print(plot)
 
 
 ```{python}
-#| label: Q2
+#| label: Q5
 #| code-summary: Read and format data
 # Include and execute your code here
 
-import numpy as np
-from plotnine import ggplot, aes, geom_line, geom_vline, geom_text, scale_x_continuous, scale_y_continuous, labs, theme, element_text, guides, guide_legend
 
 # Create a mapping for release dates and their respective labels
 release_mapping = {
