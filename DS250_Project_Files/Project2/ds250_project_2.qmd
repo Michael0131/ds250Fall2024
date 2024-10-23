@@ -1,7 +1,7 @@
 ---
 title: "Client Report - Project 2"
 subtitle: "Course DS 250"
-author: "YOUR NAME HERE"
+author: "Michael Johnson"
 format:
   html:
     self-contained: true
@@ -58,9 +58,9 @@ PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this re
 
 ```
 
-__Highlight the Questions and Tasks__
+## |Task 1
+# Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”). In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the “NaN” for at least one missing value. 
 
-## Question|Task 1
 
 ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
@@ -72,8 +72,9 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
 ```
 
+## |Task 2
+# Which airport has the worst delays? Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.
 
-## Question|Task 2
 
 ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
@@ -85,5 +86,54 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
 ```
 
-ADD MORE QUESTION SECTIONS AS NEEDED
+
+
+## |Task 3
+# What is the best month to fly if you want to avoid delays of any length? Describe the metric you chose and why you chose it to calculate your answer. Include one chart to help support your answer, with the x-axis ordered by month. (To answer this question, you will need to remove any rows that are missing the Month variable.)
+
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q2
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+
+
+## |Task 4
+# According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories. Your job is to create a new column that calculates the total number of flights delayed by weather (both severe and mild). You will need to replace all the missing values in the Late Aircraft variable with the mean. Show your work by printing the first 5 rows of data in a table. Use these three rules for your calculations:
+
+# A. 100% of delayed flights in the Weather category are due to weather
+# B. 30% of all delayed flights in the Late-Arriving category are due to weather
+# C. From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q2
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+
+
+## |Task 5
+# Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Describe what you learn from this graph.
+
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q2
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
 
