@@ -68,6 +68,27 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| label: Q1
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html()
+# Ensure the correct file path and method for reading
+file_path = "flights_missing.json"  # Update with the actual path to your CSV file
+df = pd.read_json(file_path)
+
+# Ensure the correct file path and method for reading
+file_path = "flights_missing.json"  # Update with the actual path to your file
+df = pd.read_json(file_path)
+
+# Replace the varied missing values with np.nan as discussed in the article
+df = df.replace({"1500+": np.nan, -999: np.nan})
+
+# Convert np.nan values to the string "NaN" for reporting purposes only
+df = df.replace({np.nan: "NaN"})
+
+# Print one row from the DataFrame to show the changes, with "NaN" as missing values
+print(df.iloc[0].to_json())
+
 
 
 ```
@@ -82,7 +103,32 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html()
 
+file_path = "flights_missing.json"  # Update with the actual path to your CSV file
+df = pd.read_json(file_path)
+
+# Ensure the correct file path and method for reading
+file_path = "flights_missing.json"  # Update with the actual path to your file
+df = pd.read_json(file_path)
+# Calculate total delays and total delay minutes for each airport
+airport_delays = df.groupby("airport_code").agg(
+    total_delays=("num_of_delays_total", "sum"),
+    total_delay_minutes=("minutes_delayed_total", "sum")
+).reset_index()
+
+# Calculate the average delay duration per delayed flight in hours
+airport_delays["average_delay_hours"] = (airport_delays["total_delay_minutes"] / airport_delays["total_delays"]) / 60
+
+# Find the airport with the highest delay count and longest average delay time
+# Sort by total delays and average delay hours to identify the "worst" airport
+worst_airports = airport_delays.sort_values(by=["total_delays", "average_delay_hours"], ascending=[False, False])
+
+# Display the result to find where high delay count and long average delay intersect
+import ace_tools as tools; tools.display_dataframe_to_user(name="Worst Airports by Delay Frequency and Duration", dataframe=worst_airports)
 
 ```
 
