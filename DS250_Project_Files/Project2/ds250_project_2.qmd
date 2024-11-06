@@ -97,7 +97,7 @@ print(df.iloc[0].to_json())
 # Which airport has the worst delays? Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.
 
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+The data includes information on flights from various airports, such as the total number of flights, the number of delayed flights, and the total minutes of delay. A summary table was created to present key metrics for each airport: total flights, total delayed flights, proportion of delayed flights, and average delay time in hours. This table allows us to compare airports based on delay frequency and duration. Using these metrics, the analysis identified the worst-performing airport by prioritizing high delay proportions and, when frequencies were close, selecting the airport with the longest average delay time. This approach highlights airports with both frequent and severe delays, offering a clear view of their performance.
 
 ```{python}
 #| label: Q2
@@ -106,29 +106,50 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 import pandas as pd
 import numpy as np
 from lets_plot import *
+
+# Setup for LetsPlot visualization
 LetsPlot.setup_html()
 
-file_path = "flights_missing.json"  # Update with the actual path to your CSV file
+# Load data
+file_path = "flights_missing.json"  # Ensure the correct file path is specified
 df = pd.read_json(file_path)
 
-# Ensure the correct file path and method for reading
-file_path = "flights_missing.json"  # Update with the actual path to your file
-df = pd.read_json(file_path)
-# Calculate total delays and total delay minutes for each airport
+# Calculate required metrics
 airport_delays = df.groupby("airport_code").agg(
+    total_flights=("num_of_flights_total", "sum"),
     total_delays=("num_of_delays_total", "sum"),
     total_delay_minutes=("minutes_delayed_total", "sum")
 ).reset_index()
 
-# Calculate the average delay duration per delayed flight in hours
+# Calculate additional columns for analysis
+airport_delays["proportion_delayed_flights"] = airport_delays["total_delays"] / airport_delays["total_flights"]
 airport_delays["average_delay_hours"] = (airport_delays["total_delay_minutes"] / airport_delays["total_delays"]) / 60
 
-# Find the airport with the highest delay count and longest average delay time
-# Sort by total delays and average delay hours to identify the "worst" airport
-worst_airports = airport_delays.sort_values(by=["total_delays", "average_delay_hours"], ascending=[False, False])
+# Sort by proportion of delayed flights and average delay hours
+airport_delays = airport_delays.sort_values(by=["proportion_delayed_flights", "average_delay_hours"], ascending=[False, False])
 
-# Display the result to find where high delay count and long average delay intersect
-import ace_tools as tools; tools.display_dataframe_to_user(name="Worst Airports by Delay Frequency and Duration", dataframe=worst_airports)
+# Define threshold for "close" delay frequencies
+proportion_threshold = 0.02  # e.g., within 2% difference in delay frequency
+
+# Find the airport with the highest delay proportion
+highest_delay_proportion = airport_delays["proportion_delayed_flights"].max()
+high_frequency_airports = airport_delays[
+    airport_delays["proportion_delayed_flights"] >= highest_delay_proportion - proportion_threshold
+]
+
+# Among the high-frequency delay airports, select the one with the longest delay hours
+if len(high_frequency_airports) > 1:
+    # Sort by average delay hours within the high-frequency group to find the longest delays
+    worst_airport = high_frequency_airports.sort_values(by="average_delay_hours", ascending=False).head(1)
+else:
+    # If there's only one airport in the high-frequency group, it is the "worst" airport
+    worst_airport = high_frequency_airports
+
+# Display results
+print("Airport Delay Summary:")
+print(airport_delays)
+print("\nWorst Airport Based on High Delay Frequency and Long Delay Duration:")
+print(worst_airport)
 
 ```
 
