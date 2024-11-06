@@ -159,13 +159,73 @@ print(worst_airport)
 # What is the best month to fly if you want to avoid delays of any length? Describe the metric you chose and why you chose it to calculate your answer. Include one chart to help support your answer, with the x-axis ordered by month. (To answer this question, you will need to remove any rows that are missing the Month variable.)
 
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+The data includes monthly flight statistics from various airports, detailing the total number of flights, the number of delayed flights, and the proportion of delays. To identify the best month to avoid delays, the metric chosen was the proportion of delayed flights, calculated as the number of delayed flights divided by the total flights for each month. This normalized metric allows for a fair comparison of delay rates across months. The line chart visualizes this proportion over the year, with each month ordered on the x-axis from January to December. The chart clearly highlights trends in delays, making it easy to see which month has the lowest proportion of delayed flights, thus representing the best time to fly to minimize delays.
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import numpy as np
+from lets_plot import *
 
+# Setup for LetsPlot visualization
+LetsPlot.setup_html()
+
+# Load data
+file_path = "flights_missing.json"  # Ensure the correct file path is specified
+df = pd.read_json(file_path)
+
+# Define a mapping from month names to numeric values
+month_mapping = {
+    'January': 1, 'Febuary': 2, 'February': 2, 'March': 3, 'April': 4,
+    'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+    'October': 10, 'November': 11, 'December': 12
+}
+
+# Create a reverse mapping from numbers back to month names
+reverse_month_mapping = {v: k for k, v in month_mapping.items()}
+reverse_month_mapping[2] = 'February'  # Correct the typo in the reverse map
+
+# Replace 'n/a' with NaN explicitly
+df["month"] = df["month"].replace('n/a', np.nan)
+
+# Apply the month mapping to convert names to numbers and explicitly cast as integer
+df["month"] = df["month"].replace(month_mapping).astype(float).astype("Int64")
+
+# Remove rows where 'month' is still missing after mapping
+df = df.dropna(subset=["month"])
+
+# Convert month to integer type
+df["month"] = df["month"].astype(int)
+
+# Calculate total flights and total delays for each month
+monthly_delays = df.groupby("month").agg(
+    total_flights=("num_of_flights_total", "sum"),
+    total_delays=("num_of_delays_total", "sum")
+).reset_index()
+
+# Calculate proportion of delays
+monthly_delays["proportion_delayed_flights"] = monthly_delays["total_delays"] / monthly_delays["total_flights"]
+
+# Identify the best month to fly (with the lowest delay proportion)
+best_month_num = monthly_delays.loc[monthly_delays["proportion_delayed_flights"].idxmin(), "month"]
+best_month_name = reverse_month_mapping[best_month_num]
+
+# Display the best month by name
+print(f"The best month to fly to avoid delays is: {best_month_name}")
+
+# Create a line graph showing the proportion of delayed flights by month
+plot = ggplot(monthly_delays, aes(x="month", y="proportion_delayed_flights")) + \
+    geom_line(size=1.5) + \
+    geom_point(size=3) + \
+    ggtitle("Proportion of Delayed Flights by Month") + \
+    xlab("Month") + \
+    ylab("Proportion of Delayed Flights") + \
+    scale_x_continuous(breaks=list(range(1, 13))) + \
+    scale_y_continuous(breaks=np.arange(0, monthly_delays["proportion_delayed_flights"].max() + 0.02, 0.02))
+
+plot
 
 ```
 
@@ -178,13 +238,62 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 # B. 30% of all delayed flights in the Late-Arriving category are due to weather
 # C. From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+The data provides monthly statistics on flight delays, including various categories that contribute to delay counts, such as weather, late-arriving aircraft, and NAS delays. To capture the full impact of weather on delays, we created a new column, total_weather_delays, which aggregates both severe and mild weather delays according to specific rules: severe weather delays are fully accounted for in the Weather category, while mild delays are partially attributed to the Late-Arriving Aircraft and NAS categories based on seasonal variations. The table shown includes the calculated total_weather_delays alongside the original delay categories, offering a comprehensive view of weather-related delay contributions across different months.
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import numpy as np
 
+# Load data
+file_path = "flights_missing.json"  # Ensure the correct file path is specified
+df = pd.read_json(file_path)
+
+# Replace 'n/a' in the month column with NaN explicitly
+df["month"] = df["month"].replace('n/a', np.nan)
+
+# Define month mapping for any month names that might need it
+month_mapping = {
+    'January': 1, 'Febuary': 2, 'February': 2, 'March': 3, 'April': 4,
+    'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+    'October': 10, 'November': 11, 'December': 12
+}
+
+# Map month names to numbers separately to avoid implicit downcasting
+df["month"] = df["month"].replace(month_mapping)
+df = df.dropna(subset=["month"])  # Drop rows where month is still missing
+
+# Convert month to integer type explicitly
+df["month"] = df["month"].astype(int)
+
+# Replace -999 values in 'num_of_delays_late_aircraft' with NaN
+df["num_of_delays_late_aircraft"] = df["num_of_delays_late_aircraft"].replace(-999, np.nan)
+
+# 1. Replace missing values in 'num_of_delays_late_aircraft' with the mean
+mean_late_aircraft_delay = df["num_of_delays_late_aircraft"].mean(skipna=True)
+df["num_of_delays_late_aircraft"] = df["num_of_delays_late_aircraft"].fillna(mean_late_aircraft_delay)
+
+# 2. Calculate 'total_weather_delays' based on rules A, B, and C
+# Rule A: 100% of 'num_of_delays_weather' are due to severe weather
+df["weather_delay_severe"] = df["num_of_delays_weather"]
+
+# Rule B: 30% of 'num_of_delays_late_aircraft' are due to mild weather
+df["weather_delay_late_aircraft"] = 0.3 * df["num_of_delays_late_aircraft"]
+
+# Rule C: For 'num_of_delays_nas', use different proportions based on the month
+df["weather_delay_nas"] = np.where(
+    df["month"].between(4, 8),  # April to August
+    0.4 * df["num_of_delays_nas"],  # 40% due to weather
+    0.65 * df["num_of_delays_nas"]  # 65% due to weather for other months
+)
+
+# Sum up all weather-related delays
+df["total_weather_delays"] = df["weather_delay_severe"] + df["weather_delay_late_aircraft"] + df["weather_delay_nas"]
+
+# Print the first 5 rows of the data to show the new column
+print(df[["month", "num_of_delays_weather", "num_of_delays_late_aircraft", "num_of_delays_nas", "total_weather_delays"]].head())
 
 ```
 
