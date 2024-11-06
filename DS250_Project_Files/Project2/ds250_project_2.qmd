@@ -303,13 +303,89 @@ print(df[["month", "num_of_delays_weather", "num_of_delays_late_aircraft", "num_
 # Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Describe what you learn from this graph.
 
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+The bar chart titled "Proportion of Flights Delayed by Weather at Each Airport" illustrates the percentage of flights delayed due to weather at various airports. Each bar represents an airport, with the height of the bar showing the proportion of total flights that experienced weather-related delays. From the chart, we can see that airports like SFO and ORD have the highest proportions of weather-related delays, indicating that flights at these locations are more frequently impacted by adverse weather conditions. Conversely, airports like SLC and DEN have lower proportions of weather delays, suggesting they may experience more favorable weather conditions or better management of mild weather delays. This information can be useful for travelers or airlines planning to minimize weather-induced disruptions.
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
 
+import pandas as pd
+import numpy as np
+from lets_plot import *
 
+# Load data
+file_path = "flights_missing.json"  # Ensure the correct file path is specified
+df = pd.read_json(file_path)
+
+# Setup for LetsPlot visualization
+LetsPlot.setup_html()
+
+# Define month mapping for any month names that might need it
+month_mapping = {
+    'January': 1, 'Febuary': 2, 'February': 2, 'March': 3, 'April': 4,
+    'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+    'October': 10, 'November': 11, 'December': 12
+}
+
+# Replace 'n/a' and other missing indicators in the month column with NaN explicitly
+df["month"] = df["month"].replace('n/a', np.nan)
+
+# Apply the month mapping to convert names to numbers
+df["month"] = df["month"].replace(month_mapping)
+
+# Drop rows where 'month' is still missing after mapping
+df = df.dropna(subset=["month"])
+
+# Convert month to integer type explicitly
+df["month"] = df["month"].astype(int)
+
+# Replace -999 values in 'num_of_delays_late_aircraft' with NaN
+df["num_of_delays_late_aircraft"] = df["num_of_delays_late_aircraft"].replace(-999, np.nan)
+
+# Replace missing values in 'num_of_delays_late_aircraft' with the mean
+mean_late_aircraft_delay = df["num_of_delays_late_aircraft"].mean(skipna=True)
+df["num_of_delays_late_aircraft"] = df["num_of_delays_late_aircraft"].fillna(mean_late_aircraft_delay)
+
+# Calculate 'total_weather_delays' based on rules A, B, and C
+# Rule A: 100% of 'num_of_delays_weather' are due to severe weather
+df["weather_delay_severe"] = df["num_of_delays_weather"]
+
+# Rule B: 30% of 'num_of_delays_late_aircraft' are due to mild weather
+df["weather_delay_late_aircraft"] = 0.3 * df["num_of_delays_late_aircraft"]
+
+# Rule C: For 'num_of_delays_nas', use different proportions based on the month
+df["weather_delay_nas"] = np.where(
+    df["month"].between(4, 8),  # April to August
+    0.4 * df["num_of_delays_nas"],  # 40% due to weather
+    0.65 * df["num_of_delays_nas"]  # 65% due to weather for other months
+)
+
+# Sum up all weather-related delays
+df["total_weather_delays"] = df["weather_delay_severe"] + df["weather_delay_late_aircraft"] + df["weather_delay_nas"]
+
+# Calculate the proportion of weather-related delays at each airport
+df["proportion_weather_delays"] = df["total_weather_delays"] / df["num_of_flights_total"]
+
+# Aggregate data to get the proportion of weather delays per airport
+airport_weather_delays = df.groupby("airport_code").agg(
+    total_flights=("num_of_flights_total", "sum"),
+    total_weather_delays=("total_weather_delays", "sum")
+).reset_index()
+
+# Calculate the proportion for each airport and convert it to a percentage
+airport_weather_delays["proportion_weather_delays"] = (
+    airport_weather_delays["total_weather_delays"] / airport_weather_delays["total_flights"]
+) * 100  # Convert to percentage
+
+# Create a barplot showing the proportion of flights delayed by weather at each airport
+plot = ggplot(airport_weather_delays, aes(x="airport_code", y="proportion_weather_delays")) + \
+    geom_bar(stat="identity") + \
+    ggtitle("Proportion of Flights Delayed by Weather at Each Airport") + \
+    xlab("Airport") + \
+    ylab("Proportion of Weather Delays (%)") + \
+    scale_y_continuous(breaks=list(range(0, int(airport_weather_delays["proportion_weather_delays"].max()) + 5, 5)))
+
+plot
 ```
 
