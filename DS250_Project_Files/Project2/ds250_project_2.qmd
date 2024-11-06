@@ -50,7 +50,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 ## Elevator pitch
 
-PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this report?
+In this report, we analyze flight delay data to identify patterns, challenges, and optimal choices for travelers and airlines alike. By examining the frequency and causes of delays across airports and months, we provide insights into the "worst" and "best" times and places to fly, based on delay likelihood and severity. Additionally, we delve into the impact of weather on delays, distinguishing between severe and mild conditions to better understand their effects on flight schedules. This analysis aims to inform smarter travel decisions and potential operational improvements in airport management.
 
 
 ```{python}
@@ -61,8 +61,7 @@ PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this re
 ## |Task 1
 # Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”). In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the “NaN” for at least one missing value. 
 
-
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+In this task, I standardized all missing values in the dataset to ensure consistency and improve data readability. The original dataset contained various representations of missing values, such as "1500+" and -999, which I converted to a single format, NaN, using the np.nan placeholder. This approach allows me to handle missing values more effectively in subsequent analyses. Additionally, for reporting purposes, I temporarily replaced NaN with the string "NaN" to clearly display missing values. The example output below shows a record from the dataset in JSON format, illustrating the consistent use of "NaN" for missing data points. This confirms that the data cleaning process successfully standardized all missing values across the dataset.
 
 ```{python}
 #| label: Q1
@@ -162,7 +161,7 @@ print(worst_airport)
 The data includes monthly flight statistics from various airports, detailing the total number of flights, the number of delayed flights, and the proportion of delays. To identify the best month to avoid delays, the metric chosen was the proportion of delayed flights, calculated as the number of delayed flights divided by the total flights for each month. This normalized metric allows for a fair comparison of delay rates across months. The line chart visualizes this proportion over the year, with each month ordered on the x-axis from January to December. The chart clearly highlights trends in delays, making it easy to see which month has the lowest proportion of delayed flights, thus representing the best time to fly to minimize delays.
 
 ```{python}
-#| label: Q2
+#| label: Q3
 #| code-summary: Read and format data
 # Include and execute your code here
 import pandas as pd
@@ -241,7 +240,7 @@ plot
 The data provides monthly statistics on flight delays, including various categories that contribute to delay counts, such as weather, late-arriving aircraft, and NAS delays. To capture the full impact of weather on delays, we created a new column, total_weather_delays, which aggregates both severe and mild weather delays according to specific rules: severe weather delays are fully accounted for in the Weather category, while mild delays are partially attributed to the Late-Arriving Aircraft and NAS categories based on seasonal variations. The table shown includes the calculated total_weather_delays alongside the original delay categories, offering a comprehensive view of weather-related delay contributions across different months.
 
 ```{python}
-#| label: Q2
+#| label: Q4
 #| code-summary: Read and format data
 # Include and execute your code here
 import pandas as pd
@@ -306,7 +305,7 @@ print(df[["month", "num_of_delays_weather", "num_of_delays_late_aircraft", "num_
 The bar chart titled "Proportion of Flights Delayed by Weather at Each Airport" illustrates the percentage of flights delayed due to weather at various airports. Each bar represents an airport, with the height of the bar showing the proportion of total flights that experienced weather-related delays. From the chart, we can see that airports like SFO and ORD have the highest proportions of weather-related delays, indicating that flights at these locations are more frequently impacted by adverse weather conditions. Conversely, airports like SLC and DEN have lower proportions of weather delays, suggesting they may experience more favorable weather conditions or better management of mild weather delays. This information can be useful for travelers or airlines planning to minimize weather-induced disruptions.
 
 ```{python}
-#| label: Q2
+#| label: Q5
 #| code-summary: Read and format data
 # Include and execute your code here
 
