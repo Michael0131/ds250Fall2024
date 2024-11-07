@@ -3133,15 +3133,10 @@ vertical-align: -.125em;
   <li><a href="#questiontask-3" id="toc-questiontask-3">Question|Task 3</a></li>
   </ul></li>
   <li><a href="#pick-any-two-baseball-teams-and-compare-them-using-a-metric-of-your-choice-average-salary-home-runs-number-of-wins-etc.-write-an-sql-query-to-get-the-data-you-need-then-make-a-graph-using-lets-plot-to-visualize-the-comparison.-what-do-you-learn" id="toc-pick-any-two-baseball-teams-and-compare-them-using-a-metric-of-your-choice-average-salary-home-runs-number-of-wins-etc.-write-an-sql-query-to-get-the-data-you-need-then-make-a-graph-using-lets-plot-to-visualize-the-comparison.-what-do-you-learn">Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?</a></li>
-  <li><a href="#connect-to-the-sqlite-database" id="toc-connect-to-the-sqlite-database">Connect to the SQLite database</a></li>
-  <li><a href="#sql-query-for-atlanta-braves-and-baltimore-orioles" id="toc-sql-query-for-atlanta-braves-and-baltimore-orioles">SQL Query for Atlanta Braves and Baltimore Orioles</a></li>
-  <li><a href="#convert-average_salary-to-integer-for-readability" id="toc-convert-average_salary-to-integer-for-readability">Convert average_salary to integer for readability</a></li>
-  <li><a href="#check-the-dataframe-content" id="toc-check-the-dataframe-content">Check the DataFrame content</a></li>
-  <li><a href="#plotting-without-custom-y-axis-labels" id="toc-plotting-without-custom-y-axis-labels">Plotting without custom y-axis labels</a></li>
   </ul>
 </nav>
 <p><em>THIS <code>.qmd</code> FILE SHOULD BE USED TO WRITE YOUR REPORT. YOU WILL NEED TO COMPILE THE REPORT INTO A <code>.html</code> DOCUMENT AND SUBMIT IT ON CANVAS.</em></p>
-<div id="a6382d51" class="cell" data-execution_count="2">
+<div id="9e88c182" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load any data you need for the report</span></span>
@@ -3151,7 +3146,7 @@ vertical-align: -.125em;
 <section id="elevator-pitch" class="level2">
 <h2 class="anchored" data-anchor-id="elevator-pitch">Elevator pitch</h2>
 <p>In this report, I analyze various aspects of Major League Baseball player performance and team salary structures across three tasks. In Task 1, I calculate and rank individual player batting averages for both single seasons and entire careers, highlighting the top performers based on consistent hitting ability. This analysis provides insights into the most effective hitters over both short and long periods. Task 2 builds on this by comparing the performance of players from different schools, specifically those who attended BYU-Idaho, allowing us to see how players from this institution perform in terms of salary and overall impact in professional baseball. Finally, in Task 3, I focus on the financial aspect by comparing the average salaries of players from two MLB teams, the Atlanta Braves and the Baltimore Orioles. This comparison reveals differences in team spending on player talent, which may reflect their strategic priorities. Through these analyses, the report aims to offer a well-rounded perspective on both individual player excellence and team investment patterns within Major League Baseball.</p>
-<div id="554c19b9" class="cell" data-execution_count="3">
+<div id="5cc14af6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Any code for your pitch</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3198,7 +3193,7 @@ vertical-align: -.125em;
 </details>
 <div id="q1" class="cell-output cell-output-display">
 
-            <div id="PT3yxi"></div>
+            <div id="bWMGzo"></div>
             <script type="text/javascript" data-lets-plot-script="library">
                 if(!window.letsPlotCallQueue) {
                     window.letsPlotCallQueue = [];
@@ -3222,9 +3217,9 @@ vertical-align: -.125em;
                         var div = document.createElement("div");
                         div.style.color = 'darkred';
                         div.textContent = 'Error loading Lets-Plot JS';
-                        document.getElementById("PT3yxi").appendChild(div);
+                        document.getElementById("bWMGzo").appendChild(div);
                     };
-                    var e = document.getElementById("PT3yxi");
+                    var e = document.getElementById("bWMGzo");
                     e.appendChild(script);
                 })()
             </script>
@@ -3329,7 +3324,7 @@ vertical-align: -.125em;
 </details>
 <div id="q2" class="cell-output cell-output-display">
 
-            <div id="ONPkwS"></div>
+            <div id="alg8fC"></div>
             <script type="text/javascript" data-lets-plot-script="library">
                 if(!window.letsPlotCallQueue) {
                     window.letsPlotCallQueue = [];
@@ -3353,9 +3348,9 @@ vertical-align: -.125em;
                         var div = document.createElement("div");
                         div.style.color = 'darkred';
                         div.textContent = 'Error loading Lets-Plot JS';
-                        document.getElementById("ONPkwS").appendChild(div);
+                        document.getElementById("alg8fC").appendChild(div);
                     };
-                    var e = document.getElementById("ONPkwS");
+                    var e = document.getElementById("alg8fC");
                     e.appendChild(script);
                 })()
             </script>
@@ -3396,31 +3391,135 @@ Part C:
 <section id="pick-any-two-baseball-teams-and-compare-them-using-a-metric-of-your-choice-average-salary-home-runs-number-of-wins-etc.-write-an-sql-query-to-get-the-data-you-need-then-make-a-graph-using-lets-plot-to-visualize-the-comparison.-what-do-you-learn" class="level1">
 <h1>Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?</h1>
 <p>In this task, I compare the Atlanta Braves and the Baltimore Orioles based on their average player salaries. Using SQL, I calculate the average salary for each team, then display the results in a bar chart for a clear visual comparison. The chart highlights differences in salary investment between the two teams, offering insights into each team’s financial approach to player compensation. This analysis helps illustrate the disparity in average salaries, which may reflect different strategies, budgets, or team priorities. The bar chart provides an effective visual representation, making it easy to compare average salaries side by side.</p>
-<p>#| label: Q3 #| code-summary: Read and format data # Include and execute your code here import pandas as pd from lets_plot import * LetsPlot.setup_html() import sqlite3</p>
-</section>
-<section id="connect-to-the-sqlite-database" class="level1">
-<h1>Connect to the SQLite database</h1>
-<p>con = sqlite3.connect(r’c:/FallSemester2024/DataSci250Fall2024/ds250Fall2024/DS250_Project_Files/Project3/lahmansbaseballdb.sqlite’)</p>
-</section>
-<section id="sql-query-for-atlanta-braves-and-baltimore-orioles" class="level1">
-<h1>SQL Query for Atlanta Braves and Baltimore Orioles</h1>
-<p>query = ’’’ SELECT teamID, AVG(salary) AS average_salary FROM salaries WHERE teamID IN (“ATL”, “BAL”) GROUP BY teamID ’’’ df = pd.read_sql_query(query, con)</p>
-</section>
-<section id="convert-average_salary-to-integer-for-readability" class="level1">
-<h1>Convert average_salary to integer for readability</h1>
-<p>df[‘average_salary’] = df[‘average_salary’].round().astype(int)</p>
-</section>
-<section id="check-the-dataframe-content" class="level1">
-<h1>Check the DataFrame content</h1>
-<p>print(df)</p>
-</section>
-<section id="plotting-without-custom-y-axis-labels" class="level1">
-<h1>Plotting without custom y-axis labels</h1>
-<p>ggplot(df, aes(x=‘teamID’, y=‘average_salary’)) +<br>
-geom_bar(stat=‘identity’) +<br>
-ggtitle(‘Average Salary Comparison: Atlanta Braves vs. Baltimore Orioles’) +<br>
-ylab(‘Average Salary’) +<br>
-xlab(‘Team ID’)</p>
+<div id="q3" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Read and format data</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lets_plot <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>LetsPlot.setup_html()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Connect to the SQLite database</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="vs">r&#39;c:/FallSemester2024/DataSci250Fall2024/ds250Fall2024/DS250_Project_Files/Project3/lahmansbaseballdb.sqlite&#39;</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># SQL Query for Atlanta Braves and Baltimore Orioles</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="st">&#39;&#39;&#39;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT teamID,</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="st">           AVG(salary) AS average_salary</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM salaries</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE teamID IN (&quot;ATL&quot;, &quot;BAL&quot;)</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY teamID</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="st">    &#39;&#39;&#39;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql_query(query, con)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert average_salary to integer for readability</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;average_salary&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;average_salary&#39;</span>].<span class="bu">round</span>().astype(<span class="bu">int</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the DataFrame content</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting without custom y-axis labels</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>ggplot(df, aes(x<span class="op">=</span><span class="st">&#39;teamID&#39;</span>, y<span class="op">=</span><span class="st">&#39;average_salary&#39;</span>)) <span class="op">+</span> <span class="op">\</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    geom_bar(stat<span class="op">=</span><span class="st">&#39;identity&#39;</span>) <span class="op">+</span> <span class="op">\</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    ggtitle(<span class="st">&#39;Average Salary Comparison: Atlanta Braves vs. Baltimore Orioles&#39;</span>) <span class="op">+</span> <span class="op">\</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    ylab(<span class="st">&#39;Average Salary&#39;</span>) <span class="op">+</span> <span class="op">\</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    xlab(<span class="st">&#39;Team ID&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="q3-1" class="cell-output cell-output-display">
+
+            <div id="KLlD7o"></div>
+            <script type="text/javascript" data-lets-plot-script="library">
+                if(!window.letsPlotCallQueue) {
+                    window.letsPlotCallQueue = [];
+                }; 
+                window.letsPlotCall = function(f) {
+                    window.letsPlotCallQueue.push(f);
+                };
+                (function() {
+                    var script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.src = "https://cdn.jsdelivr.net/gh/JetBrains/lets-plot@v4.4.1/js-package/distr/lets-plot.min.js";
+                    script.onload = function() {
+                        window.letsPlotCall = function(f) {f();};
+                        window.letsPlotCallQueue.forEach(function(f) {f();});
+                        window.letsPlotCallQueue = [];
+                        
+                    };
+                    script.onerror = function(event) {
+                        window.letsPlotCall = function(f) {};    // noop
+                        window.letsPlotCallQueue = [];
+                        var div = document.createElement("div");
+                        div.style.color = 'darkred';
+                        div.textContent = 'Error loading Lets-Plot JS';
+                        document.getElementById("KLlD7o").appendChild(div);
+                    };
+                    var e = document.getElementById("KLlD7o");
+                    e.appendChild(script);
+                })()
+            </script>
+            
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  teamID  average_salary
+0    ATL         2211176
+1    BAL         2028839</code></pre>
+</div>
+<div id="q3-2" class="cell-output cell-output-display" data-execution_count="12">
+   <div id="oj7FiH"></div>
+   <script type="text/javascript" data-lets-plot-script="plot">
+       (function() {
+           var plotSpec={
+"data":{
+"teamID":["ATL","BAL"],
+"average_salary":[2211176.0,2028839.0]
+},
+"mapping":{
+"x":"teamID",
+"y":"average_salary"
+},
+"data_meta":{
+"series_annotations":[{
+"type":"str",
+"column":"teamID"
+},{
+"type":"int",
+"column":"average_salary"
+}]
+},
+"ggtitle":{
+"text":"Average Salary Comparison: Atlanta Braves vs. Baltimore Orioles"
+},
+"guides":{
+"y":{
+"title":"Average Salary"
+},
+"x":{
+"title":"Team ID"
+}
+},
+"kind":"plot",
+"scales":[],
+"layers":[{
+"geom":"bar",
+"stat":"identity",
+"mapping":{
+},
+"data_meta":{
+},
+"data":{
+}
+}],
+"metainfo_list":[]
+};
+           var plotContainer = document.getElementById("oj7FiH");
+           window.letsPlotCall(function() {{
+               LetsPlot.buildPlotFromProcessedSpecs(plotSpec, -1, -1, plotContainer);
+           }});
+       })();
+   </script>
+</div>
+</div>
 </section>
 
 </main>
