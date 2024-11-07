@@ -50,7 +50,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 ## Elevator pitch
 
-PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this report?
+In this report, I analyze various aspects of Major League Baseball player performance and team salary structures across three tasks. In Task 1, I calculate and rank individual player batting averages for both single seasons and entire careers, highlighting the top performers based on consistent hitting ability. This analysis provides insights into the most effective hitters over both short and long periods. Task 2 builds on this by comparing the performance of players from different schools, specifically those who attended BYU-Idaho, allowing us to see how players from this institution perform in terms of salary and overall impact in professional baseball. Finally, in Task 3, I focus on the financial aspect by comparing the average salaries of players from two MLB teams, the Atlanta Braves and the Baltimore Orioles. This comparison reveals differences in team spending on player talent, which may reflect their strategic priorities. Through these analyses, the report aims to offer a well-rounded perspective on both individual player excellence and team investment patterns within Major League Baseball.
 
 
 ```{python}
@@ -61,29 +61,157 @@ PLACE YOUR "30 SECOND" SALES PITCH HERE.  What are you trying to show in this re
 __Highlight the Questions and Tasks__
 
 ## Question|Task 1
+# Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+This analysis focuses on baseball players who attended BYU-Idaho, examining their salaries across different teams and years. The data includes each player’s ID, school ID, salary, year, and team, allowing a view into the compensation patterns of players from BYU-Idaho. By ordering the table from highest to lowest salary, we can easily identify top earners and observe salary trends among BYU-Idaho alumni. This organized view highlights the financial outcomes for players from a specific institution without additional charts, as the table itself effectively communicates the salary distribution.
 
 ```{python}
 #| label: Q1
 #| code-summary: Read and format data
 # Include and execute your code here
 
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html()
+import sqlite3
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+con = sqlite3.connect(r'c:/FallSemester2024/DataSci250Fall2024/ds250Fall2024/DS250_Project_Files/Project3/lahmansbaseballdb.sqlite')# Write the SQL query
+#schools and name_full
+#collegeplaying
+query = '''
+    SELECT collegeplaying.playerID,
+           collegeplaying.schoolID,
+           salaries.salary,
+           salaries.yearID,
+           salaries.teamID
+    FROM collegeplaying
+    JOIN salaries ON collegeplaying.playerID = salaries.playerID
+    WHERE collegeplaying.schoolID = "idbyuid"
+    ORDER BY salary DESC
+    '''
+df = pd.read_sql_query(query, con)
+df = df.drop_duplicates()
+print(df)
+
+
 
 ```
 
 
 ## Question|Task 2
+# This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+#  a. Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.
+#  b. Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.
+#  c. Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.
+
+This task analyzes player batting averages through three parts. In part (a), we calculate and rank the yearly batting averages for players with at least one at-bat, showing the top five performers. Part (b) follows a similar approach but includes only players with a minimum of ten at-bats, emphasizing those with more substantial playtime. In part (c), we calculate career batting averages across all seasons, considering only players with at least 100 at-bats, and list the top five results. Each table reveals the top batters based on different thresholds, providing insights into both seasonal and career-long performance trends. No charts are included, as the tables offer a straightforward comparison of player averages.
 
 ```{python}
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
 
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html()
+import sqlite3
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+con = sqlite3.connect(r'c:/FallSemester2024/DataSci250Fall2024/ds250Fall2024/DS250_Project_Files/Project3/lahmansbaseballdb.sqlite')# Write the SQL query
+#batting
+print("Part A:")
+query_a = '''
+    SELECT playerID,
+           yearID,
+           H,
+           AB,
+           CAST(H AS FLOAT) / AB AS batting_average
+    FROM batting
+    WHERE AB > 1
+    ORDER BY batting_average DESC, playerID ASC
+    LIMIT 5
+    '''
+df_a = pd.read_sql_query(query_a, con)
+print(df_a)
+print("")
+print("")
+print("Part B:")
+query_b = '''
+    SELECT playerID,
+           yearID,
+           H,
+           AB,
+           CAST(H AS FLOAT) / AB AS batting_average
+    FROM batting
+    WHERE AB > 10
+    ORDER BY batting_average DESC, playerID ASC
+    LIMIT 5
+    '''
+df_b = pd.read_sql_query(query_b, con)
+print(df_b)
+print("")
+print("")
+print("Part C:")
+query_c = '''
+    SELECT playerID,
+           SUM(H) AS total_hits,
+           SUM(AB) AS total_at_bats,
+           CAST(SUM(H) AS FLOAT) / SUM(AB) AS career_batting_average
+    FROM batting
+    GROUP BY playerID
+    HAVING total_at_bats >= 100
+    ORDER BY career_batting_average DESC, playerID ASC
+    LIMIT 5
+    '''
+df_c = pd.read_sql_query(query_c, con)
+print(df_c)
 
 ```
 
-ADD MORE QUESTION SECTIONS AS NEEDED
+
+## Question|Task 3
+# Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?
+
+In this task, I compare the Atlanta Braves and the Baltimore Orioles based on their average player salaries. Using SQL, I calculate the average salary for each team, then display the results in a bar chart for a clear visual comparison. The chart highlights differences in salary investment between the two teams, offering insights into each team's financial approach to player compensation. This analysis helps illustrate the disparity in average salaries, which may reflect different strategies, budgets, or team priorities. The bar chart provides an effective visual representation, making it easy to compare average salaries side by side.
+
+```{python}
+#| label: Q3
+#| code-summary: Read and format data
+# Include and execute your code here
+import pandas as pd
+from lets_plot import *
+LetsPlot.setup_html()
+import sqlite3
+
+# Connect to the SQLite database
+con = sqlite3.connect(r'c:/FallSemester2024/DataSci250Fall2024/ds250Fall2024/DS250_Project_Files/Project3/lahmansbaseballdb.sqlite')
+
+# SQL Query for Atlanta Braves and Baltimore Orioles
+query = '''
+    SELECT teamID,
+           AVG(salary) AS average_salary
+    FROM salaries
+    WHERE teamID IN ("ATL", "BAL")
+    GROUP BY teamID
+    '''
+df = pd.read_sql_query(query, con)
+
+# Convert average_salary to integer for readability
+df['average_salary'] = df['average_salary'].round().astype(int)
+
+# Check the DataFrame content
+print(df)
+
+# Plotting without custom y-axis labels
+ggplot(df, aes(x='teamID', y='average_salary')) + \
+    geom_bar(stat='identity') + \
+    ggtitle('Average Salary Comparison: Atlanta Braves vs. Baltimore Orioles') + \
+    ylab('Average Salary') + \
+    xlab('Team ID')
 
