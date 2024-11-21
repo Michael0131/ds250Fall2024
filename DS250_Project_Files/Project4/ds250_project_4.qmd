@@ -62,18 +62,104 @@ __Highlight the Questions and Tasks__
 
 ## Question|Task 1
 
+Instructions: 
+Create 2-3 charts that evaluate potential relationships between the home variables and before1980. Explain what you learn from the charts that could help a machine learning algorithm.
+
 ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
 ```{python}
 #| label: Q1
 #| code-summary: Read and format data
 # Include and execute your code here
+# Import libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.ticker as mtick
+from IPython.display import display, HTML
 
+# ---- Load the dataset ----
+file_path = 'dwellings_ml.csv'  # Adjust this path as needed
+df = pd.read_csv(file_path)
+
+# ---- Preprocess Data ----
+# Combine condition columns into a single categorical feature
+condition_columns = ['condition_AVG', 'condition_Excel', 'condition_Fair', 'condition_Good', 'condition_VGood']
+df['condition'] = df[condition_columns].idxmax(axis=1)
+
+# Simplify condition categories
+df['condition_grouped'] = df['condition'].replace({
+    'condition_AVG': 'Moderate',
+    'condition_Good': 'Moderate',
+    'condition_VGood': 'High',
+    'condition_Excel': 'High',
+    'condition_Fair': 'Low'
+})
+
+# Combine quality columns into a single categorical feature
+quality_columns = ['quality_A', 'quality_B', 'quality_C', 'quality_D', 'quality_X']
+df['quality'] = df[quality_columns].idxmax(axis=1)
+
+# Replace 0/1 in 'before1980' with 'No'/'Yes'
+df['before1980'] = df['before1980'].replace({0: 'No', 1: 'Yes'})
+
+# ---- Render Simplified Data Table ----
+# Select relevant columns for display
+columns_to_display = [
+    'livearea', 'sprice', 'condition_grouped', 'quality', 'before1980'
+]
+df_relevant = df[columns_to_display]
+
+# Display the simplified table in HTML format
+html_table = df_relevant.head().to_html(index=False)
+display(HTML(html_table))
+
+# ---- Chart 1: Bar Plot (Grouped Conditions vs. Before1980) ----
+plt.figure(figsize=(12, 6))
+sns.countplot(data=df, x='condition_grouped', hue='before1980', palette='viridis')
+plt.title('Number of Homes Built by Grouped Condition and Before1980', fontsize=16)
+plt.xlabel('Condition (Grouped)', fontsize=12)
+plt.ylabel('Count', fontsize=12)
+plt.xticks(rotation=45, fontsize=10)
+plt.legend(title='Built Before 1980', fontsize=10)
+plt.show()
+
+# ---- Chart 2: Simplified Scatter Plot ----
+# Calculate the logical minimum for the y-axis
+y_min = max(0, df['sprice'].quantile(0.25) - 5e5)  # Start slightly below 25th percentile
+
+plt.figure(figsize=(12, 6))
+sns.scatterplot(data=df, x='livearea', y='sprice', hue='before1980', alpha=0.7, palette='deep', s=50)
+
+# Title and Labels
+plt.title('Square Footage vs. Sale Price (Colored by Before1980)', fontsize=16)
+plt.xlabel('Square Footage (Live Area)', fontsize=12)
+plt.ylabel('Sale Price (in Millions)', fontsize=12)
+
+# Set Y-Axis Range and Format
+plt.gca().set_ylim(y_min, df['sprice'].max())
+plt.gca().yaxis.set_major_formatter(mtick.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
+
+# Add Square Footage Markers (X-axis) every 2,500 square feet
+plt.xticks(range(0, int(df['livearea'].max()) + 2500, 2500), fontsize=10)
+
+# Add Gridlines for Every $500,000
+plt.gca().yaxis.set_minor_locator(plt.MultipleLocator(5e5))  # Every $500,000
+plt.grid(which='minor', linestyle='--', linewidth=0.5, alpha=0.7)  # Dashes for minor gridlines
+
+# Update Legend Title
+plt.legend(title='Built Before 1980 (Yes/No)', fontsize=10)
+
+plt.show()
 
 ```
 
 
 ## Question|Task 2
+
+Instructions: 
+Build a classification model labeling houses as being built “before 1980” or “during or after 1980”. Your goal is to reach or exceed 90% accuracy. Explain your final model choice (algorithm, tuning parameters, etc) and describe what other models you tried.
+
 
 ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
@@ -87,3 +173,38 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
 ADD MORE QUESTION SECTIONS AS NEEDED
 
+## Question|Task 3
+
+Instructions: 
+Justify your classification model by discussing the most important features selected by your model. This discussion should include a feature importance chart and a description of the features.
+
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q3
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+ADD MORE QUESTION SECTIONS AS NEEDED
+
+## Question|Task 4
+
+Instructions: 
+Describe the quality of your classification model using 2-3 different evaluation metrics. You also need to explain how to interpret each of the evaluation metrics you use.
+
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q4
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+ADD MORE QUESTION SECTIONS AS NEEDED
