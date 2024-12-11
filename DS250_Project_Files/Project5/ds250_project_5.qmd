@@ -63,7 +63,7 @@ __Highlight the Questions and Tasks__
 ## Question|Task 1
 
 Instructions:
- 
+
 Shorten the column names and clean them up for easier use with pandas. Provide a table or list that exemplifies how you fixed the names.
 
 What was done:
@@ -183,11 +183,65 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| label: Q2
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+
+# Load the cleaned dataset
+file_path = "StarWars_Cleaned.csv"
+data = pd.read_csv(file_path)
+
+# Filter respondents who have seen at least one film
+filtered_data = data[data['seen_any'] == "Yes"].copy()
+
+# Map age ranges to numeric values
+age_mapping = {
+    "18-29": 24,
+    "30-44": 37,
+    "45-60": 52,
+    "> 60": 65
+}
+filtered_data.loc[:, 'age_numeric'] = filtered_data['age'].map(age_mapping)
+filtered_data.drop(columns=['age'], inplace=True)
+
+# Map education levels to numeric values
+education_mapping = {
+    "Less than high school degree": 0,
+    "High school degree": 1,
+    "Some college or Associate degree": 2,
+    "Bachelor degree": 3,
+    "Graduate degree": 4
+}
+filtered_data.loc[:, 'education_numeric'] = filtered_data['education'].map(education_mapping)
+filtered_data.drop(columns=['education'], inplace=True)
+
+# Map income ranges to numeric values
+income_mapping = {
+    "$0 - $24,999": 12500,
+    "$25,000 - $49,999": 37500,
+    "$50,000 - $99,999": 75000,
+    "$100,000 - $149,999": 125000,
+    "$150,000+": 150000
+}
+filtered_data.loc[:, 'income_numeric'] = filtered_data['income'].map(income_mapping)
+filtered_data.drop(columns=['income'], inplace=True)
+
+# Create target column
+filtered_data.loc[:, 'makes_over_50k'] = (filtered_data['income_numeric'] > 50000).astype(int)
+
+# One-hot encode remaining categorical columns
+categorical_columns = ['gender', 'location']
+encoded_data = pd.get_dummies(filtered_data, columns=categorical_columns, drop_first=True)
+
+# Save the cleaned data for machine learning
+encoded_data.to_csv("StarWars_Cleaned_ML.csv", index=False)
+
+# Display the first few rows of the cleaned data
+print("Cleaned and formatted data for machine learning:")
+print(encoded_data.head())
+
 
 
 ```
 
-ADD MORE QUESTION SECTIONS AS NEEDED
 
 ## Question|Task 3
 
@@ -200,6 +254,76 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| label: Q3
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the dataset
+file_path = "StarWars_Cleaned_ML.csv"  # Correct file path
+data = pd.read_csv(file_path)
+
+# Print the columns to verify their names
+print("Columns in dataset:")
+print(data.columns)
+
+# Filter respondents who have seen any film
+seen_any_data = data[data['seen_any'] == "Yes"]
+
+# Define movie columns based on dataset
+movie_columns = [
+    "Star Wars: Episode I  The Phantom Menace",
+    "Star Wars: Episode II  Attack of the Clones",
+    "Star Wars: Episode III  Revenge of the Sith",
+    "Star Wars: Episode IV  A New Hope",
+    "Star Wars: Episode V The Empire Strikes Back",
+    "Star Wars: Episode VI Return of the Jedi"
+]
+
+# Calculate percentages of respondents who have seen each movie
+seen_percentages = [
+    seen_any_data[column].notna().sum() / len(seen_any_data) * 100
+    for column in movie_columns
+]
+
+# Plot Visual 1: Movies Seen
+plt.figure(figsize=(10, 6))
+plt.barh(movie_columns, seen_percentages, color='blue')
+plt.xlabel('Percentage')
+plt.title("Which 'Star Wars' Movies Have You Seen?")
+plt.gca().invert_yaxis()
+plt.show()
+
+# Best Star Wars Movie Analysis
+# Assume respondents who ranked movies are stored under rank columns
+rank_columns = [
+    "rank_episode_1", "rank_episode_2", "rank_episode_3",
+    "rank_episode_4", "rank_episode_5", "rank_episode_6"
+]
+
+# Calculate the percentage of respondents who ranked each movie as the best
+best_movie_percentages = [
+    (seen_any_data[column] == 1).sum() / len(seen_any_data) * 100
+    for column in rank_columns
+]
+
+# Map movie titles to ranks for the chart
+movie_titles = [
+    "The Phantom Menace",
+    "Attack of the Clones",
+    "Revenge of the Sith",
+    "A New Hope",
+    "The Empire Strikes Back",
+    "Return of the Jedi"
+]
+
+# Plot Visual 2: Best Movie Rankings
+plt.figure(figsize=(10, 6))
+plt.barh(movie_titles, best_movie_percentages, color='green')
+plt.xlabel('Percentage')
+plt.title("What's the Best 'Star Wars' Movie?")
+plt.gca().invert_yaxis()
+plt.show()
+
+
 
 
 ```
