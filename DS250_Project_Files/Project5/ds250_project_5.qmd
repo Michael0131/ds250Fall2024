@@ -185,9 +185,26 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 # Include and execute your code here
 import pandas as pd
 
-# Load the cleaned dataset
-file_path = "StarWars_Cleaned.csv"
-data = pd.read_csv(file_path)
+# Load the original dataset
+file_path = "StarWars.csv"
+try:
+    data = pd.read_csv(file_path, encoding='utf-8')
+except UnicodeDecodeError:
+    data = pd.read_csv(file_path, encoding='latin1')
+
+# Rename the columns for clarity
+data.rename(
+    columns={
+        "Have you seen any of the 6 films in the Star Wars franchise?": "seen_any",
+        "Do you consider yourself to be a fan of the Star Wars film franchise?": "is_fan",
+        "Unnamed: 4": "seen_episode_2",
+        "Unnamed: 5": "seen_episode_3",
+        "Unnamed: 6": "seen_episode_4",
+        "Unnamed: 7": "seen_episode_5",
+        "Unnamed: 8": "seen_episode_6",
+    },
+    inplace=True,
+)
 
 # Filter respondents who have seen at least one film
 filtered_data = data[data['seen_any'] == "Yes"].copy()
@@ -199,8 +216,8 @@ age_mapping = {
     "45-60": 52,
     "> 60": 65
 }
-filtered_data.loc[:, 'age_numeric'] = filtered_data['age'].map(age_mapping)
-filtered_data.drop(columns=['age'], inplace=True)
+filtered_data['age_numeric'] = filtered_data['Age'].map(age_mapping)
+filtered_data.drop(columns=['Age'], inplace=True)
 
 # Map education levels to numeric values
 education_mapping = {
@@ -210,8 +227,8 @@ education_mapping = {
     "Bachelor degree": 3,
     "Graduate degree": 4
 }
-filtered_data.loc[:, 'education_numeric'] = filtered_data['education'].map(education_mapping)
-filtered_data.drop(columns=['education'], inplace=True)
+filtered_data['education_numeric'] = filtered_data['Education'].map(education_mapping)
+filtered_data.drop(columns=['Education'], inplace=True)
 
 # Map income ranges to numeric values
 income_mapping = {
@@ -221,23 +238,38 @@ income_mapping = {
     "$100,000 - $149,999": 125000,
     "$150,000+": 150000
 }
-filtered_data.loc[:, 'income_numeric'] = filtered_data['income'].map(income_mapping)
-filtered_data.drop(columns=['income'], inplace=True)
+filtered_data['income_numeric'] = filtered_data['Household Income'].map(income_mapping)
+filtered_data.drop(columns=['Household Income'], inplace=True)
 
 # Create target column
-filtered_data.loc[:, 'makes_over_50k'] = (filtered_data['income_numeric'] > 50000).astype(int)
+filtered_data['makes_over_50k'] = (filtered_data['income_numeric'] > 50000).astype(int)
+
+# Combine all movie columns into a single column indicating movies seen
+movie_columns = [
+    "Which of the following Star Wars films have you seen? Please select all that apply.",
+    "seen_episode_2",
+    "seen_episode_3",
+    "seen_episode_4",
+    "seen_episode_5",
+    "seen_episode_6",
+]
+filtered_data['movies_seen'] = filtered_data[movie_columns].apply(
+    lambda row: ', '.join(row.dropna()), axis=1
+)
+
+# Drop the original movie columns
+filtered_data.drop(columns=movie_columns, inplace=True)
 
 # One-hot encode remaining categorical columns
-categorical_columns = ['gender', 'location']
+categorical_columns = ['Gender', 'Location (Census Region)']
 encoded_data = pd.get_dummies(filtered_data, columns=categorical_columns, drop_first=True)
 
-# Save the cleaned data for machine learning
+# Save the cleaned data
 encoded_data.to_csv("StarWars_Cleaned_ML.csv", index=False)
 
 # Display the first few rows of the cleaned data
 print("Cleaned and formatted data for machine learning:")
 print(encoded_data.head())
-
 
 
 ```
@@ -261,12 +293,10 @@ import matplotlib.pyplot as plt
 file_path = "StarWars_Cleaned_ML.csv"
 data = pd.read_csv(file_path)
 
-# Print columns for verification
-print("Columns in dataset:")
-print(data.columns)
+# --- Visual 1: "Which 'Star Wars' Movies Have You Seen?" ---
 
-# Define the list of movies based on the column content
-movie_titles = [
+# Split 'movies_seen' column into individual movie counts
+movie_columns = [
     "Star Wars: Episode I  The Phantom Menace",
     "Star Wars: Episode II  Attack of the Clones",
     "Star Wars: Episode III  Revenge of the Sith",
@@ -275,48 +305,57 @@ movie_titles = [
     "Star Wars: Episode VI Return of the Jedi"
 ]
 
-# Create columns for each movie seen (boolean values)
-for movie in movie_titles:
-    data[movie] = data['Which of the following Star Wars films have you seen? Please select all that apply.'].str.contains(movie, na=False)
+# Initialize a dictionary to count occurrences of each movie
+movie_counts = {movie: 0 for movie in movie_columns}
 
-# Filter data to include only respondents who have seen any movie
-seen_any_data = data[data['seen_any'] == "Yes"]
+# Count occurrences of each movie
+for movies in data["movies_seen"].dropna():
+    for movie in movie_columns:
+        if movie in movies:
+            movie_counts[movie] += 1
 
-# Calculate percentages for each movie
-seen_percentages = [
-    seen_any_data[movie].sum() / len(seen_any_data) * 100 for movie in movie_titles
-]
+# Calculate percentages
+total_respondents = len(data)
+movie_percentages = {
+    movie: (count / total_respondents) * 100 for movie, count in movie_counts.items()
+}
 
-# Plot Visual 1: Movies Seen
+# Plot the visual
 plt.figure(figsize=(10, 6))
-plt.barh(movie_titles, seen_percentages, color='blue')
-plt.xlabel('Percentage')
+plt.barh(list(movie_percentages.keys()), list(movie_percentages.values()), color="blue")
+plt.xlabel("Percentage")
 plt.title("Which 'Star Wars' Movies Have You Seen?")
-plt.gca().invert_yaxis()
+plt.tight_layout()
 plt.show()
 
-# Assume rankings columns exist; dynamically identify them
-ranking_columns = [
-    col for col in data.columns if 'rank' in col.lower() and 'Star Wars' in col
+# --- Visual 2: "What's the Best 'Star Wars' Movie?" ---
+
+# Aggregate rankings for "best" (ranked as 1)
+rank_columns = [
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film.",
+    "Unnamed: 10", "Unnamed: 11", "Unnamed: 12", "Unnamed: 13", "Unnamed: 14"
 ]
 
-# Calculate percentages for each movie being ranked as the favorite
-best_movie_percentages = [
-    (seen_any_data[column] == 1).sum() / len(seen_any_data) * 100
-    for column in ranking_columns
-]
+best_movie_counts = {movie: 0 for movie in movie_columns}
 
-# Map human-readable movie titles to rankings
-ranked_movie_titles = movie_titles[:len(ranking_columns)]  # Ensure alignment
+# Count the number of "1" rankings for each movie
+for index, row in data.iterrows():
+    for i, movie in enumerate(movie_columns):
+        if i < len(rank_columns) and row[rank_columns[i]] == 1:
+            best_movie_counts[movie] += 1
 
-# Plot Visual 2: Best Movie Rankings
+# Calculate percentages for "best" rankings
+best_movie_percentages = {
+    movie: (count / total_respondents) * 100 for movie, count in best_movie_counts.items()
+}
+
+# Plot the visual
 plt.figure(figsize=(10, 6))
-plt.barh(ranked_movie_titles, best_movie_percentages, color='green')
-plt.xlabel('Percentage')
+plt.barh(list(best_movie_percentages.keys()), list(best_movie_percentages.values()), color="green")
+plt.xlabel("Percentage")
 plt.title("What's the Best 'Star Wars' Movie?")
-plt.gca().invert_yaxis()
+plt.tight_layout()
 plt.show()
-
 
 
 
