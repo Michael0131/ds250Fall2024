@@ -257,19 +257,16 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load the dataset
-file_path = "StarWars_Cleaned_ML.csv"  # Correct file path
+# Load the cleaned dataset
+file_path = "StarWars_Cleaned_ML.csv"
 data = pd.read_csv(file_path)
 
-# Print the columns to verify their names
+# Print columns for verification
 print("Columns in dataset:")
 print(data.columns)
 
-# Filter respondents who have seen any film
-seen_any_data = data[data['seen_any'] == "Yes"]
-
-# Define movie columns based on dataset
-movie_columns = [
+# Define the list of movies based on the column content
+movie_titles = [
     "Star Wars: Episode I  The Phantom Menace",
     "Star Wars: Episode II  Attack of the Clones",
     "Star Wars: Episode III  Revenge of the Sith",
@@ -278,50 +275,48 @@ movie_columns = [
     "Star Wars: Episode VI Return of the Jedi"
 ]
 
-# Calculate percentages of respondents who have seen each movie
+# Create columns for each movie seen (boolean values)
+for movie in movie_titles:
+    data[movie] = data['Which of the following Star Wars films have you seen? Please select all that apply.'].str.contains(movie, na=False)
+
+# Filter data to include only respondents who have seen any movie
+seen_any_data = data[data['seen_any'] == "Yes"]
+
+# Calculate percentages for each movie
 seen_percentages = [
-    seen_any_data[column].notna().sum() / len(seen_any_data) * 100
-    for column in movie_columns
+    seen_any_data[movie].sum() / len(seen_any_data) * 100 for movie in movie_titles
 ]
 
 # Plot Visual 1: Movies Seen
 plt.figure(figsize=(10, 6))
-plt.barh(movie_columns, seen_percentages, color='blue')
+plt.barh(movie_titles, seen_percentages, color='blue')
 plt.xlabel('Percentage')
 plt.title("Which 'Star Wars' Movies Have You Seen?")
 plt.gca().invert_yaxis()
 plt.show()
 
-# Best Star Wars Movie Analysis
-# Assume respondents who ranked movies are stored under rank columns
-rank_columns = [
-    "rank_episode_1", "rank_episode_2", "rank_episode_3",
-    "rank_episode_4", "rank_episode_5", "rank_episode_6"
+# Assume rankings columns exist; dynamically identify them
+ranking_columns = [
+    col for col in data.columns if 'rank' in col.lower() and 'Star Wars' in col
 ]
 
-# Calculate the percentage of respondents who ranked each movie as the best
+# Calculate percentages for each movie being ranked as the favorite
 best_movie_percentages = [
     (seen_any_data[column] == 1).sum() / len(seen_any_data) * 100
-    for column in rank_columns
+    for column in ranking_columns
 ]
 
-# Map movie titles to ranks for the chart
-movie_titles = [
-    "The Phantom Menace",
-    "Attack of the Clones",
-    "Revenge of the Sith",
-    "A New Hope",
-    "The Empire Strikes Back",
-    "Return of the Jedi"
-]
+# Map human-readable movie titles to rankings
+ranked_movie_titles = movie_titles[:len(ranking_columns)]  # Ensure alignment
 
 # Plot Visual 2: Best Movie Rankings
 plt.figure(figsize=(10, 6))
-plt.barh(movie_titles, best_movie_percentages, color='green')
+plt.barh(ranked_movie_titles, best_movie_percentages, color='green')
 plt.xlabel('Percentage')
 plt.title("What's the Best 'Star Wars' Movie?")
 plt.gca().invert_yaxis()
 plt.show()
+
 
 
 
