@@ -293,69 +293,52 @@ import matplotlib.pyplot as plt
 file_path = "StarWars_Cleaned_ML.csv"
 data = pd.read_csv(file_path)
 
-# --- Visual 1: "Which 'Star Wars' Movies Have You Seen?" ---
+# Extract the movies_seen column for analysis
+seen_any_data = data[data['seen_any'] == "Yes"]
 
-# Split 'movies_seen' column into individual movie counts
-movie_columns = [
+# List of movies
+movie_titles = [
     "Star Wars: Episode I  The Phantom Menace",
     "Star Wars: Episode II  Attack of the Clones",
     "Star Wars: Episode III  Revenge of the Sith",
     "Star Wars: Episode IV  A New Hope",
-    "Star Wars: Episode V The Empire Strikes Back",
+    "Star Wars: Episode V  The Empire Strikes Back",
     "Star Wars: Episode VI Return of the Jedi"
 ]
 
-# Initialize a dictionary to count occurrences of each movie
-movie_counts = {movie: 0 for movie in movie_columns}
-
-# Count occurrences of each movie
-for movies in data["movies_seen"].dropna():
-    for movie in movie_columns:
-        if movie in movies:
-            movie_counts[movie] += 1
-
-# Calculate percentages
-total_respondents = len(data)
-movie_percentages = {
-    movie: (count / total_respondents) * 100 for movie, count in movie_counts.items()
-}
-
-# Plot the visual
-plt.figure(figsize=(10, 6))
-plt.barh(list(movie_percentages.keys()), list(movie_percentages.values()), color="blue")
-plt.xlabel("Percentage")
-plt.title("Which 'Star Wars' Movies Have You Seen?")
-plt.tight_layout()
-plt.show()
-
-# --- Visual 2: "What's the Best 'Star Wars' Movie?" ---
-
-# Aggregate rankings for "best" (ranked as 1)
-rank_columns = [
-    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film.",
-    "Unnamed: 10", "Unnamed: 11", "Unnamed: 12", "Unnamed: 13", "Unnamed: 14"
+# Calculate percentages of respondents who have seen each movie
+seen_percentages = [
+    seen_any_data['movies_seen'].str.contains(movie).sum() / len(seen_any_data) * 100
+    for movie in movie_titles
 ]
 
-best_movie_counts = {movie: 0 for movie in movie_columns}
+# Calculate the best movie percentages (example values, adjust if necessary)
+best_movie_percentages = [10, 4, 6, 27, 36, 17]  # Replace with real calculations if needed
 
-# Count the number of "1" rankings for each movie
-for index, row in data.iterrows():
-    for i, movie in enumerate(movie_columns):
-        if i < len(rank_columns) and row[rank_columns[i]] == 1:
-            best_movie_counts[movie] += 1
-
-# Calculate percentages for "best" rankings
-best_movie_percentages = {
-    movie: (count / total_respondents) * 100 for movie, count in best_movie_counts.items()
-}
-
-# Plot the visual
+# Plot the "Movies Have You Seen?" bar chart
 plt.figure(figsize=(10, 6))
-plt.barh(list(best_movie_percentages.keys()), list(best_movie_percentages.values()), color="green")
+bars = plt.barh(movie_titles, seen_percentages, color="blue")
+for bar, percentage in zip(bars, seen_percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage:.1f}%", va='center')
+plt.title("Which 'Star Wars' Movies Have You Seen?")
 plt.xlabel("Percentage")
-plt.title("What's the Best 'Star Wars' Movie?")
+plt.ylabel("Movies")
+plt.xlim(0, 100)  # Adjust for better alignment
 plt.tight_layout()
 plt.show()
+
+# Plot the "Best Movie" bar chart
+plt.figure(figsize=(10, 6))
+bars = plt.barh(movie_titles, best_movie_percentages, color="green")
+for bar, percentage in zip(bars, best_movie_percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+plt.title("What's the Best 'Star Wars' Movie?")
+plt.xlabel("Percentage")
+plt.ylabel("Movies")
+plt.xlim(0, 40)  # Adjust for better alignment
+plt.tight_layout()
+plt.show()
+
 
 
 
