@@ -25,7 +25,6 @@ execute:
     
 ---
 
-_THIS `.qmd` FILE SHOULD BE USED TO WRITE YOUR REPORT.  YOU WILL NEED TO COMPILE THE REPORT INTO A `.html` DOCUMENT AND SUBMIT IT ON CANVAS._
 
 ```{python}
 #| label: libraries

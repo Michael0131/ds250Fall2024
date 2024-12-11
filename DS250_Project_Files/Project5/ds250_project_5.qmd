@@ -62,18 +62,120 @@ __Highlight the Questions and Tasks__
 
 ## Question|Task 1
 
-ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+Instructions:
+ 
+Shorten the column names and clean them up for easier use with pandas. Provide a table or list that exemplifies how you fixed the names.
+
+What was done:
+To complete this task, I shortened and cleaned up column names for easier use with pandas. I replaced verbose names with concise, readable alternatives, such as changing "Have you seen any of the 6 films in the Star Wars franchise?" to seen_any, and applied consistent snake_case formatting throughout. Additionally, I resolved encoding issues in column names and removed meaningless unnamed columns.
 
 ```{python}
 #| label: Q1
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+
+# Define the file path
+file_path = "StarWars.csv"
+
+# Load the dataset with error handling for encoding
+try:
+    data = pd.read_csv(file_path, encoding='utf-8')
+except UnicodeDecodeError:
+    print("UTF-8 decoding failed. Trying 'latin1' encoding...")
+    data = pd.read_csv(file_path, encoding='latin1')
+
+# Display the first few rows to confirm successful loading
+print("Dataset Loaded Successfully. First few rows:")
+print(data.head())
+
+# Original column names
+original_column_names = data.columns.tolist()
+print("\nOriginal Column Names:")
+print(original_column_names)
+
+# Define a dictionary to map original names to cleaned names
+column_mapping = {
+    "RespondentID": "respondent_id",
+    "Have you seen any of the 6 films in the Star Wars franchise?": "seen_any",
+    "Do you consider yourself to be a fan of the Star Wars film franchise?": "is_fan",
+    "Star Wars: Episode I  The Phantom Menace": "seen_episode_1",
+    "Star Wars: Episode II  Attack of the Clones": "seen_episode_2",
+    "Star Wars: Episode III  Revenge of the Sith": "seen_episode_3",
+    "Star Wars: Episode IV  A New Hope": "seen_episode_4",
+    "Star Wars: Episode V The Empire Strikes Back": "seen_episode_5",
+    "Star Wars: Episode VI Return of the Jedi": "seen_episode_6",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode I  The Phantom Menace": "rank_episode_1",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode II  Attack of the Clones": "rank_episode_2",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode III  Revenge of the Sith": "rank_episode_3",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode IV  A New Hope": "rank_episode_4",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode V The Empire Strikes Back": "rank_episode_5",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode VI Return of the Jedi": "rank_episode_6",
+    "Which character shot first?": "character_shot_first",
+    "Are you familiar with the Expanded Universe?": "familiar_eu",
+    "Do you consider yourself to be a fan of the Expanded Universe?Do you consider yourself to be a fan of the Expanded Universe?\x8cæ": "is_fan_expanded_universe",
+    "Do you consider yourself to be a fan of the Star Trek franchise?": "is_fan_star_trek",
+    "Gender": "gender",
+    "Age": "age",
+    "Household Income": "income",
+    "Education": "education",
+    "Location (Census Region)": "location"
+}
+
+# Apply the renaming
+data.rename(columns=column_mapping, inplace=True)
+
+# Drop unnamed columns if they hold no useful data
+unnamed_columns = [col for col in data.columns if col.startswith('Unnamed:')]
+data.drop(columns=unnamed_columns, inplace=True)
+
+# Display the cleaned column names
+cleaned_column_names = data.columns.tolist()
+print("\nCleaned Column Names:")
+print(cleaned_column_names)
+
+# Save the cleaned dataset for future steps
+data.to_csv("StarWars_Cleaned.csv", index=False)
+print("\nCleaned dataset saved as 'StarWars_Cleaned.csv'.")
 
 
 ```
 
+Original vs. Cleaned Column Names
+
+| **Original Column Name**                                                                                                   | **Cleaned Column Name**           |
+|---------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| `RespondentID`                                                                                                            | `respondent_id`                   |
+| `Have you seen any of the 6 films in the Star Wars franchise?`                                                            | `seen_any`                        |
+| `Do you consider yourself to be a fan of the Star Wars film franchise?`                                                   | `is_fan`                          |
+| `Star Wars: Episode I  The Phantom Menace`                                                                                | `seen_episode_1`                  |
+| `Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film. - Star Wars: Episode I  The Phantom Menace` | `rank_episode_1`                  |
+| `Which character shot first?`                                                                                             | `character_shot_first`            |
+| `Do you consider yourself to be a fan of the Expanded Universe?\x8cæ`                                                     | `is_fan_expanded_universe`        |
+| `Do you consider yourself to be a fan of the Star Trek franchise?`                                                        | `is_fan_star_trek`                |
+| `Gender`                                                                                                                  | `gender`                          |
+| `Age`                                                                                                                     | `age`                             |
+| `Household Income`                                                                                                        | `income`                          |
+| `Education`                                                                                                               | `education`                       |
+| `Location (Census Region)` 
+
+
+
+
+
+
 
 ## Question|Task 2
+
+Instructions:
+Clean and format the data so that it can be used in a machine learning model. As you format the data, you should complete each item listed below. In your final report provide example(s) of the reformatted data with a short description of the changes made.
+
+- Filter the dataset to respondents that have seen at least one film
+- Create a new column that converts the age ranges to a single number. Drop the age range categorical column
+- Create a new column that converts the education groupings to a single number. Drop the school categorical column
+- Create a new column that converts the income ranges to a single number. Drop the income range categorical column
+- Create your target (also known as “y” or “label”) column based on the new income range column
+- One-hot encode all remaining categorical columns
 
 ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
@@ -87,3 +189,36 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 
 ADD MORE QUESTION SECTIONS AS NEEDED
 
+## Question|Task 3
+
+Instructions:
+Validate that the data provided on GitHub lines up with the article by recreating 2 of the visuals from the article.
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q3
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+ADD MORE QUESTION SECTIONS AS NEEDED
+
+## Question|Task 4
+
+Instructions:
+Build a machine learning model that predicts whether a person makes more than $50k. Describe your model and report the accuracy.
+
+ADD YOUR COMMENTS HERE. Explain any data, charts or tables
+
+```{python}
+#| label: Q4
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+ADD MORE QUESTION SECTIONS AS NEEDED
