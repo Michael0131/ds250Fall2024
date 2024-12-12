@@ -192,24 +192,25 @@ try:
 except UnicodeDecodeError:
     data = pd.read_csv(file_path, encoding='latin1')
 
-# Rename the columns for clarity
-data.rename(
-    columns={
-        "Have you seen any of the 6 films in the Star Wars franchise?": "seen_any",
-        "Do you consider yourself to be a fan of the Star Wars film franchise?": "is_fan",
-        "Unnamed: 4": "seen_episode_2",
-        "Unnamed: 5": "seen_episode_3",
-        "Unnamed: 6": "seen_episode_4",
-        "Unnamed: 7": "seen_episode_5",
-        "Unnamed: 8": "seen_episode_6",
-    },
-    inplace=True,
-)
 
-# Filter respondents who have seen at least one film
-filtered_data = data[data['seen_any'] == "Yes"].copy()
+# Rename columns for better access
+data.rename(columns={
+    "Have you seen any of the 6 films in the Star Wars franchise?": "seen_any",
+    "Do you consider yourself to be a fan of the Star Wars film franchise?": "is_fan",
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film.": "rank_episode_1",
+    "Unnamed: 10": "rank_episode_2",
+    "Unnamed: 11": "rank_episode_3",
+    "Unnamed: 12": "rank_episode_4",
+    "Unnamed: 13": "rank_episode_5",
+    "Unnamed: 14": "rank_episode_6",
+},inplace=True)
 
-# Map age ranges to numeric values
+
+# Filter the dataset to respondents who have seen at least one film
+filtered_data = data[data['seen_any'] == 'Yes'].copy()
+
+
+# Map age ranges to a single numeric value
 age_mapping = {
     "18-29": 24,
     "30-44": 37,
@@ -219,7 +220,7 @@ age_mapping = {
 filtered_data['age_numeric'] = filtered_data['Age'].map(age_mapping)
 filtered_data.drop(columns=['Age'], inplace=True)
 
-# Map education levels to numeric values
+# Map education levels to a single numeric value
 education_mapping = {
     "Less than high school degree": 0,
     "High school degree": 1,
@@ -230,7 +231,7 @@ education_mapping = {
 filtered_data['education_numeric'] = filtered_data['Education'].map(education_mapping)
 filtered_data.drop(columns=['Education'], inplace=True)
 
-# Map income ranges to numeric values
+# Map income ranges to a single numeric value
 income_mapping = {
     "$0 - $24,999": 12500,
     "$25,000 - $49,999": 37500,
@@ -241,24 +242,28 @@ income_mapping = {
 filtered_data['income_numeric'] = filtered_data['Household Income'].map(income_mapping)
 filtered_data.drop(columns=['Household Income'], inplace=True)
 
-# Create target column
+
+# Create target column: Whether the income is over $50,000
 filtered_data['makes_over_50k'] = (filtered_data['income_numeric'] > 50000).astype(int)
+
 
 # Combine all movie columns into a single column indicating movies seen
 movie_columns = [
     "Which of the following Star Wars films have you seen? Please select all that apply.",
-    "seen_episode_2",
-    "seen_episode_3",
-    "seen_episode_4",
-    "seen_episode_5",
-    "seen_episode_6",
+    "Unnamed: 4",
+    "Unnamed: 5",
+    "Unnamed: 6",
+    "Unnamed: 7",
+    "Unnamed: 8"
 ]
+
 filtered_data['movies_seen'] = filtered_data[movie_columns].apply(
-    lambda row: ', '.join(row.dropna()), axis=1
+    lambda row: ', '.join(row.dropna().astype(str)), axis=1
 )
 
 # Drop the original movie columns
 filtered_data.drop(columns=movie_columns, inplace=True)
+
 
 # One-hot encode remaining categorical columns
 categorical_columns = ['Gender', 'Location (Census Region)']
@@ -293,9 +298,6 @@ import matplotlib.pyplot as plt
 file_path = "StarWars_Cleaned_ML.csv"
 data = pd.read_csv(file_path)
 
-# Extract the movies_seen column for analysis
-seen_any_data = data[data['seen_any'] == "Yes"]
-
 # List of movies
 movie_titles = [
     "Star Wars: Episode I  The Phantom Menace",
@@ -306,36 +308,125 @@ movie_titles = [
     "Star Wars: Episode VI Return of the Jedi"
 ]
 
-# Calculate percentages of respondents who have seen each movie
+# Short titles for visualization
+short_titles = [
+    "The Phantom Menace",
+    "Attack of the Clones",
+    "Revenge of the Sith",
+    "A New Hope",
+    "The Empire Strikes Back",
+    "Return of the Jedi"
+]
+
+# Function to count movies seen
+def count_movies_seen(movies_string):
+    if isinstance(movies_string, str):
+       return len(movies_string.split(','))
+    return 0
+
+
+# Filter respondents who have seen all the movies
+seen_all_data = data[data['movies_seen'].apply(count_movies_seen) == 6].copy()
+print(f"Number of respondents who have seen all movies: {len(seen_all_data)}")
+
+# -----------------------------------------------------------------------------
+# --- Recreate Chart 1: "Percentage of Respondents Who Have Seen Each Movie" ---
+# -----------------------------------------------------------------------------
+
+# Extract the 'movies_seen' column and filter those who have seen at least one movie
+seen_any_data = data[data['seen_any'] == "Yes"]
+
+# Calculate the percentages of respondents who have seen each movie
 seen_percentages = [
-    seen_any_data['movies_seen'].str.contains(movie).sum() / len(seen_any_data) * 100
+    round(seen_any_data['movies_seen'].str.contains(movie).sum() / len(seen_any_data) * 100)
     for movie in movie_titles
 ]
 
-# Calculate the best movie percentages (example values, adjust if necessary)
-best_movie_percentages = [10, 4, 6, 27, 36, 17]  # Replace with real calculations if needed
-
-# Plot the "Movies Have You Seen?" bar chart
+# Create a horizontal bar chart
 plt.figure(figsize=(10, 6))
-bars = plt.barh(movie_titles, seen_percentages, color="blue")
-for bar, percentage in zip(bars, seen_percentages):
-    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage:.1f}%", va='center')
-plt.title("Which 'Star Wars' Movies Have You Seen?")
+bars = plt.barh(short_titles, seen_percentages, color="skyblue")
+plt.title("Percentage of Respondents Who Have Seen Each Movie")
 plt.xlabel("Percentage")
 plt.ylabel("Movies")
-plt.xlim(0, 100)  # Adjust for better alignment
+plt.xlim(0, 100)  # Set the x-axis limit for better alignment
+
+# Add percentage labels to each bar
+for bar, percentage in zip(bars, seen_percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
 plt.tight_layout()
 plt.show()
 
-# Plot the "Best Movie" bar chart
+# -----------------------------------------------------------------------------
+# --- Recreate Chart 2: "What's the Best 'Star Wars' Movie?" ---
+# -----------------------------------------------------------------------------
+
+# Filter columns related to rankings
+rankings = seen_all_data.filter(like="rank")
+
+# Count the number of times each movie was ranked as the best (rank 1)
+best_movie_counts = []
+for i in range(rankings.shape[1]):
+  best_movie_counts.append((rankings.iloc[:,i] == 1).sum())
+
+# Calculate the total number of "best movie" votes across ALL columns
+total_best_votes = sum(best_movie_counts)
+
+# Calculate percentages for the best movie rankings
+best_movie_percentages = [
+    round((count / total_best_votes) * 100) if total_best_votes > 0 else 0
+    for count in best_movie_counts
+]
+
+# Create the bar chart
 plt.figure(figsize=(10, 6))
-bars = plt.barh(movie_titles, best_movie_percentages, color="green")
+bars = plt.barh(short_titles, best_movie_percentages, color="green")
 for bar, percentage in zip(bars, best_movie_percentages):
     plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
-plt.title("What's the Best 'Star Wars' Movie?")
+plt.title("What's the Best 'Star Wars' Movie?\nOf 471 respondents who have seen all six films")
 plt.xlabel("Percentage")
 plt.ylabel("Movies")
-plt.xlim(0, 40)  # Adjust for better alignment
+plt.xlim(0, 100)  # Adjust for better alignment
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
+plt.tight_layout()
+plt.show()
+
+# -----------------------------------------------------------------------------
+# --- (Optional) Recreate Chart 3: "Who Shot First?" ---
+# -----------------------------------------------------------------------------
+
+# Extract the 'Which character shot first?' column
+shot_first_data = data['Which character shot first?'].dropna()
+
+# Calculate the response percentages
+response_counts = shot_first_data.value_counts()
+total_responses = response_counts.sum()
+response_percentages = (response_counts / total_responses * 100).round()
+
+# Labels and values for the plot
+responses = response_percentages.index.tolist()
+percentages = response_percentages.values.tolist()
+
+# Plot the "Who Shot First?" bar chart
+plt.figure(figsize=(10, 6))
+bars = plt.barh(responses, percentages, color='blue')
+plt.xlabel("Percentage")
+plt.ylabel("Responses")
+plt.title("Who Shot First?\nAccording to 834 respondents")
+
+# Add percentage labels to each bar
+for bar, percentage in zip(bars, percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
 plt.tight_layout()
 plt.show()
 
@@ -358,6 +449,153 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| label: Q4
 #| code-summary: Read and format data
 # Include and execute your code here
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the cleaned dataset
+file_path = "StarWars_Cleaned_ML.csv"
+data = pd.read_csv(file_path)
+
+# List of movies (used for filtering and labels)
+movie_titles = [
+    "Star Wars: Episode I  The Phantom Menace",
+    "Star Wars: Episode II  Attack of the Clones",
+    "Star Wars: Episode III  Revenge of the Sith",
+    "Star Wars: Episode IV  A New Hope",
+    "Star Wars: Episode V  The Empire Strikes Back",
+    "Star Wars: Episode VI Return of the Jedi"
+]
+
+# Short titles for visualization
+short_titles = [
+    "The Phantom Menace",
+    "Attack of the Clones",
+    "Revenge of the Sith",
+    "A New Hope",
+    "The Empire Strikes Back",
+    "Return of the Jedi"
+]
+
+# Function to check if all movies are seen (robust to NaNs)
+def has_seen_all_movies(movies_string):
+    if isinstance(movies_string, str):
+        return all(movie in movies_string for movie in movie_titles)
+    return False
+
+# Filter for respondents who have seen all movies
+seen_all_data = data[data['movies_seen'].apply(has_seen_all_movies)]
+print(f"Number of respondents who have seen all movies: {len(seen_all_data)}")
+
+# Calculate percentages of respondents who have seen each movie
+seen_any_data = data[data['seen_any'] == "Yes"]
+
+seen_percentages = [
+    round(seen_any_data['movies_seen'].str.contains(movie).sum() / len(seen_any_data) * 100)
+    for movie in movie_titles
+]
+
+# Plot the "Movies Seen" bar chart
+plt.figure(figsize=(10, 6))
+bars = plt.barh(short_titles, seen_percentages, color="skyblue")
+plt.title("Percentage of Respondents Who Have Seen Each Movie")
+plt.xlabel("Percentage")
+plt.ylabel("Movies")
+plt.xlim(0, 100)  # Adjust for better alignment
+
+# Add percentage labels to each bar
+for bar, percentage in zip(bars, seen_percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
+plt.tight_layout()
+plt.show()
+
+# Identify the columns that hold movie rankings
+ranking_column_names = [
+    "Please rank the Star Wars films in order of preference with 1 being your favorite film in the franchise and 6 being your least favorite film.",
+    "Unnamed: 10",
+    "Unnamed: 11",
+    "Unnamed: 12",
+    "Unnamed: 13",
+    "Unnamed: 14"
+]
+
+# Filter the ranking columns from respondents who have seen all movies
+rankings_seen_all = seen_all_data[ranking_column_names]
+
+
+# Count the number of times each movie was ranked as the best (rank 1)
+best_movie_counts = [0] * 6  # Initialize a list to store counts for each movie
+
+for _, row in rankings_seen_all.iterrows(): # Iterate through rows
+    for i, rank in enumerate(row): # Iterate through the values in each row
+        if rank == 1: # check if the rank is 1 and if so then increase the count in the list
+            best_movie_counts[i] += 1 # increase the best movie count for the movie in the specific index
+
+# Calculate the total number of "best movie" votes across ALL columns
+total_best_votes = sum(best_movie_counts)
+
+# Print debug information
+print("Debug Information:")
+for i, count in enumerate(best_movie_counts):
+    print(f"Movie: {short_titles[i]}, Best Votes: {count}")
+print(f"Total Best Votes: {total_best_votes}")
+
+
+# Calculate percentages for the best movie rankings
+best_movie_percentages = [
+    round((count / total_best_votes) * 100) if total_best_votes > 0 else 0
+    for count in best_movie_counts
+]
+
+# Plot the "Best Movie" bar chart
+plt.figure(figsize=(10, 6))
+bars = plt.barh(short_titles, best_movie_percentages, color="green")
+for bar, percentage in zip(bars, best_movie_percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+plt.title("What's the Best 'Star Wars' Movie?\nAccording to respondents who have seen all the movies")
+plt.xlabel("Percentage")
+plt.ylabel("Movies")
+plt.xlim(0, 100)  # Adjust for better alignment
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
+plt.tight_layout()
+plt.show()
+
+# Extract the 'Which character shot first?' column
+shot_first_data = data['Which character shot first?'].dropna()
+
+# Calculate the response percentages
+response_counts = shot_first_data.value_counts()
+total_responses = response_counts.sum()
+response_percentages = (response_counts / total_responses * 100).round()
+
+# Labels and values for the plot
+responses = response_percentages.index.tolist()
+percentages = response_percentages.values.tolist()
+
+# Plot the "Who Shot First?" bar chart
+plt.figure(figsize=(10, 6))
+bars = plt.barh(responses, percentages, color='blue')
+plt.xlabel("Percentage")
+plt.ylabel("Responses")
+plt.title("Who Shot First?\nAccording to 834 respondents")
+
+# Add percentage labels to each bar
+for bar, percentage in zip(bars, percentages):
+    plt.text(bar.get_width() + 1, bar.get_y() + bar.get_height() / 2, f"{percentage}%", va='center')
+
+# Add note about data source
+plt.figtext(0.5, -0.1, "Source: SurveyMonkey Audience", ha="center", fontsize=10, color="gray")
+
+plt.tight_layout()
+plt.show()
+
+
 
 
 ```
