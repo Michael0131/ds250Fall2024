@@ -418,7 +418,56 @@ ADD YOUR COMMENTS HERE. Explain any data, charts or tables
 #| code-summary: Read and format data
 # Include and execute your code here
 
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import pandas as pd
+from IPython.display import display, HTML
 
+# ---- Load Dataset ----
+file_path = 'StarWars_Cleaned_ML.csv'  # Update with your file path
+df = pd.read_csv(file_path)
+
+# ---- Define Features (X) and Target (y) ----
+X = df.drop(columns=['makes_over_50k'])  # Drop target column
+y = df['makes_over_50k']
+
+# ---- Split Dataset ----
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# ---- Train Random Forest Model ----
+rf_model = RandomForestClassifier(random_state=42)
+rf_model.fit(X_train, y_train)
+
+# ---- Make Predictions ----
+y_pred = rf_model.predict(X_test)
+
+# ---- Evaluate Model ----
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred, target_names=['No', 'Yes'])
+
+# ---- Format Confusion Matrix ----
+conf_matrix_df = pd.DataFrame(
+    conf_matrix,
+    columns=["Predicted: No", "Predicted: Yes"],
+    index=["Actual: No", "Actual: Yes"]
+)
+
+conf_matrix_html = conf_matrix_df.to_html(classes="table table-bordered", header=True, index=True)
+
+# Render Classification Report
+class_report_df = pd.DataFrame(
+    [x.split() for x in class_report.splitlines()[2:-3]],
+    columns=["Class", "Precision", "Recall", "F1-Score", "Support"]
+).to_html(classes="table table-bordered", header=True, index=False)
+
+# Add Accuracy as a Separate Line
+accuracy_html = f"<p><strong>Accuracy:</strong> {accuracy:.2%}</p>"
+
+# ---- Display Results ----
+display(HTML("<h3>Confusion Matrix</h3>" + conf_matrix_html + accuracy_html))
+display(HTML("<h3>Classification Report</h3>" + class_report_df))
 
 
 
