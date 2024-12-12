@@ -25,39 +25,9 @@ execute:
     
 ---
 
-
-```{python}
-#| label: libraries
-#| include: false
-import pandas as pd
-import numpy as np
-from lets_plot import *
-LetsPlot.setup_html()
-
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
-
-```
-
-
-```{python}
-# Load any data you need for the report
-# df = pd.read_csv('filename.csv')
-
-```
-
-
 ## Elevator pitch
 
 This project delivers a robust predictive model to identify whether homes in Denver were built before 1980, addressing critical gaps in Colorado's residential dwelling data. With a classification accuracy exceeding 92%, this model leverages key features like square footage, construction style, and quality ratings to differentiate homes. Patterns revealed through exploratory charts and precise metrics illustrate distinct correlations between home attributes and build periods. These insights not only highlight the model's reliability but also provide actionable intelligence for further housing safety evaluations. Explore the data and findings to uncover the story behind Denver’s evolving housing trends.
-
-
-```{python}
-# Any code for your pitch
-
-```
-
-__Highlight the Questions and Tasks__
 
 ## Question|Task 1
 
@@ -279,11 +249,11 @@ Square Footage and Sale Price: These continuous variables represent the physical
 # Include and execute your code here
 
 # ---- Import Required Libraries ----
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 from IPython.display import display, HTML
 
 # ---- Load Dataset ----
@@ -291,11 +261,18 @@ file_path = 'dwellings_ml.csv'  # Update with your file path
 df = pd.read_csv(file_path)
 
 # ---- Preprocessing ----
-df = df[df['livearea'] <= 10000]  # Remove outliers with livearea > 10,000
-condition_columns = ['condition_AVG', 'condition_Excel', 'condition_Fair', 'condition_Good', 'condition_VGood']
+# Remove outliers
+df = df[df['livearea'] <= 10000]  # Remove rows with livearea > 10,000
+
+# Combine quality columns
 quality_columns = ['quality_A', 'quality_B', 'quality_C', 'quality_D', 'quality_X']
-df['condition'] = df[condition_columns].idxmax(axis=1)
 df['quality'] = df[quality_columns].idxmax(axis=1)
+
+# Combine condition columns
+condition_columns = ['condition_AVG', 'condition_Excel', 'condition_Fair', 'condition_Good', 'condition_VGood']
+df['condition'] = df[condition_columns].idxmax(axis=1)
+
+# Encode categorical columns
 df_encoded = pd.get_dummies(df, columns=['condition', 'quality'], drop_first=True)
 
 # Define Features (X) and Target (y)
@@ -309,36 +286,39 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 rf_model = RandomForestClassifier(random_state=42)
 rf_model.fit(X_train, y_train)
 
-# ---- Get Feature Importances ----
+# ---- Calculate Feature Importances as Percentages ----
 importances = rf_model.feature_importances_
 features = X.columns
-importance_df = pd.DataFrame({'Feature': features, 'Importance': importances}).sort_values(by='Importance', ascending=False)
+
+# Normalize to percentages
+total_importance = sum(importances)
+importance_percentages = [(imp / total_importance) * 100 for imp in importances]
+
+# Create a DataFrame for feature importance
+importance_df = pd.DataFrame({
+    'Feature': features,
+    'Importance (%)': importance_percentages
+}).sort_values(by='Importance (%)', ascending=False)
 
 # ---- Plot Feature Importances ----
-plt.figure(figsize=(10, 10))  # Adjust height to space out labels
-sns.barplot(data=importance_df, x='Importance', y='Feature', palette='viridis')
-plt.title('Feature Importance for Predicting Before1980', fontsize=16)
-plt.xlabel('Importance', fontsize=12)
+plt.figure(figsize=(10, 10))
+sns.barplot(data=importance_df, x='Importance (%)', y='Feature', palette='viridis')
+plt.title('Feature Importance as Percentages', fontsize=16)
+plt.xlabel('Importance (%)', fontsize=12)
 plt.ylabel('Feature', fontsize=12)
 plt.tight_layout()
 
-# Save plot to image
+# Save the plot for embedding
 plt.savefig('feature_importance_chart.png')
-plt.close()  # Close the figure to prevent automatic rendering
+plt.close()
 
 # ---- Display Results in HTML ----
-# Render table of feature importance
-html_table = importance_df.to_html(classes="table table-bordered", index=False)
+html_table = importance_df.to_html(classes="table table-bordered", index=False, float_format="%.2f")
 display(HTML(f"""
 <h3>Feature Importance Chart</h3>
 <img src='feature_importance_chart.png' alt='Feature Importance Chart'><br><br>
 {html_table}
 """))
-
-
-
-
-
 ```
 
 
